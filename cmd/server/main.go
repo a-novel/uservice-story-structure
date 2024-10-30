@@ -5,15 +5,15 @@ import (
 	"time"
 
 	"github.com/charmbracelet/bubbles/spinner"
-	"github.com/charmbracelet/lipgloss"
-	"github.com/charmbracelet/lipgloss/list"
 	"github.com/uptrace/bun"
+	"google.golang.org/grpc"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
+	"google.golang.org/grpc/reflection"
 
 	"buf.build/gen/go/a-novel/proto/grpc/go/storystructure/v1/storystructurev1grpc"
 
 	"github.com/a-novel/golib/database"
-	"github.com/a-novel/golib/grpc"
+	anovelgrpc "github.com/a-novel/golib/grpc"
 	"github.com/a-novel/golib/loggers"
 	"github.com/a-novel/golib/loggers/adapters"
 	"github.com/a-novel/golib/loggers/formatters"
@@ -25,30 +25,30 @@ import (
 	"github.com/a-novel/uservice-story-structure/pkg/services"
 )
 
-var rpcServices = []string{
-	"Health",
-	"BatchDeleteBeats",
-	"BatchDeletePlotPoints",
-	"CreateBeat",
-	"CreatePlotPoint",
-	"DeleteBeat",
-	"DeletePlotPoint",
-	"GetBeat",
-	"GetPlotPoint",
-	"ListBeats",
-	"ListPlotPoints",
-	"SearchBeats",
-	"SearchPlotPoints",
-	"UpdateBeat",
-	"UpdatePlotPoint",
+var rpcServices = []grpc.ServiceDesc{
+	healthpb.Health_ServiceDesc,
+	storystructurev1grpc.BatchDeleteBeatsService_ServiceDesc,
+	storystructurev1grpc.BatchDeletePlotPointsService_ServiceDesc,
+	storystructurev1grpc.CreateBeatService_ServiceDesc,
+	storystructurev1grpc.CreatePlotPointService_ServiceDesc,
+	storystructurev1grpc.DeleteBeatService_ServiceDesc,
+	storystructurev1grpc.DeletePlotPointService_ServiceDesc,
+	storystructurev1grpc.GetBeatService_ServiceDesc,
+	storystructurev1grpc.GetPlotPointService_ServiceDesc,
+	storystructurev1grpc.ListBeatsService_ServiceDesc,
+	storystructurev1grpc.ListPlotPointsService_ServiceDesc,
+	storystructurev1grpc.SearchBeatsService_ServiceDesc,
+	storystructurev1grpc.SearchPlotPointsService_ServiceDesc,
+	storystructurev1grpc.UpdateBeatService_ServiceDesc,
+	storystructurev1grpc.UpdatePlotPointService_ServiceDesc,
 }
 
-func getDepsCheck(database *bun.DB) *grpc.DepsCheck {
-	return &grpc.DepsCheck{
-		Dependencies: grpc.DepCheckCallbacks{
+func getDepsCheck(database *bun.DB) *anovelgrpc.DepsCheck {
+	return &anovelgrpc.DepsCheck{
+		Dependencies: anovelgrpc.DepCheckCallbacks{
 			"postgres": database.Ping,
 		},
-		Services: grpc.DepCheckServices{
+		Services: anovelgrpc.DepCheckServices{
 			"batch_delete_beats":       {"postgres"},
 			"batch_delete_plot_points": {"postgres"},
 			"create_beat":              {"postgres"},
@@ -143,13 +143,14 @@ func main() {
 
 	logger.Log(loader.SetDescription("Services successfully setup.").SetCompleted(), loggers.LogLevelInfo)
 
-	listener, server, err := grpc.StartServer(config.App.Server.Port)
+	listener, server, err := anovelgrpc.StartServer(config.App.Server.Port)
 	if err != nil {
 		logger.Log(formatters.NewError(err, "start server"), loggers.LogLevelFatal)
 	}
-	defer grpc.CloseServer(listener, server)
+	defer anovelgrpc.CloseServer(listener, server)
 
-	healthpb.RegisterHealthServer(server, grpc.NewHealthServer(getDepsCheck(postgresDB), time.Minute))
+	reflection.Register(server)
+	healthpb.RegisterHealthServer(server, anovelgrpc.NewHealthServer(getDepsCheck(postgresDB), time.Minute))
 	storystructurev1grpc.RegisterBatchDeleteBeatsServiceServer(server, batchDeleteBeatsHandler)
 	storystructurev1grpc.RegisterBatchDeletePlotPointsServiceServer(server, batchDeletePlotPointsHandler)
 	storystructurev1grpc.RegisterCreateBeatServiceServer(server, createBeatHandler)
@@ -165,21 +166,8 @@ func main() {
 	storystructurev1grpc.RegisterUpdateBeatServiceServer(server, updateBeatHandler)
 	storystructurev1grpc.RegisterUpdatePlotPointServiceServer(server, updatePlotPointHandler)
 
-	servicesList := formatters.NewList().
-		SetEnumerator(list.Dash).
-		SetStyle(lipgloss.NewStyle().MarginLeft(4)).
-		SetItemStyle(lipgloss.NewStyle().MarginLeft(1).Foreground(lipgloss.Color("#FFCC66")))
-
-	for _, service := range rpcServices {
-		servicesList.Append(service)
-	}
-
-	logger.Log(
-		formatters.NewTitle("RPC services successfully registered.").
-			SetDescription(fmt.Sprintf("%v services registered on port :%v", len(rpcServices), config.App.Server.Port)).
-			SetChild(servicesList),
-		loggers.LogLevelInfo,
-	)
+	report := formatters.NewDiscoverGRPC(rpcServices, config.App.Server.Port)
+	logger.Log(report, loggers.LogLevelInfo)
 
 	if err := server.Serve(listener); err != nil {
 		logger.Log(formatters.NewError(err, "serve"), loggers.LogLevelFatal)
