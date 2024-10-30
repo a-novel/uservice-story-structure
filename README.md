@@ -35,8 +35,35 @@ go get ./... && go mod tidy
 
 ## Run the project locally
 
+### From command line
+
 ```bash
 make run
+```
+
+### From GitHub packages
+
+You can get a working version of the service from the GitHub packages, using this image:
+
+```
+ghcr.io/a-novel/uservice-story-structure/master:latest
+```
+
+> You can replace the `master` part with the name of any branch, to retrieve the image built from that branch. Or
+> replace `latest` with the sha of a commit to get the image built from that commit.
+
+The image needs 2 environment variables to work:
+
+- `PORT`: The port the service will listen to.
+- `DSN`: The connection string to a postgres database.
+
+### Make test queries
+
+You can run queries on the go from a terminal using [grpcurl](https://github.com/fullstorydev/grpcurl). Below is an
+example for the global health check (available on all services).
+
+```bash
+grpcurl -plaintext -d '{"service": ""}' localhost:4001 grpc.health.v1.Health/Check
 ```
 
 ## Work on the project

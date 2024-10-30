@@ -5,7 +5,7 @@ go 1.23.2
 require (
 	buf.build/gen/go/a-novel/proto/grpc/go v1.5.1-20241029113528-092dcdc50d47.1
 	buf.build/gen/go/a-novel/proto/protocolbuffers/go v1.35.1-20241029113528-092dcdc50d47.1
-	github.com/a-novel/golib v0.0.0-20241029233615-751ce201734d
+	github.com/a-novel/golib v0.0.0-20241030035236-c63636c9edd6
 	github.com/charmbracelet/bubbles v0.20.0
 	github.com/charmbracelet/lipgloss v0.13.1
 	github.com/go-playground/validator/v10 v10.22.1
