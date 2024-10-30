@@ -29,7 +29,7 @@ linters-settings:
       - standard # Standard section: captures all standard packages.
       - default # Default section: contains all imports that could not be matched to another section type.
       - prefix(github.com/a-novel/golib)
-      - prefix(github.com/a-novel/proto)
+      - prefix(buf.build/gen/go/a-novel)
       - prefix(github.com/a-novel/uservice-story-structure)
     skip-generated: true
 

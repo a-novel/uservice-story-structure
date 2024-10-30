@@ -10,7 +10,6 @@ import (
 
 	"github.com/a-novel/uservice-story-structure/pkg/dao"
 	daomocks "github.com/a-novel/uservice-story-structure/pkg/dao/mocks"
-	"github.com/a-novel/uservice-story-structure/pkg/entities"
 	"github.com/a-novel/uservice-story-structure/pkg/services"
 )
 
@@ -56,6 +55,31 @@ func TestSearchBeats(t *testing.T) {
 
 			request: &services.SearchBeatsRequest{
 				Limit: 10,
+			},
+
+			shouldCallSearchBeatsDAO: true,
+
+			searchBeatsDAOResponse: uuid.UUIDs{
+				uuid.MustParse("00000000-0000-0000-0000-000000000001"),
+				uuid.MustParse("00000000-0000-0000-0000-000000000002"),
+			},
+
+			expect: &services.SearchBeatsResponse{
+				IDs: []string{
+					"00000000-0000-0000-0000-000000000001",
+					"00000000-0000-0000-0000-000000000002",
+				},
+			},
+		},
+		{
+			name: "OK/CreatorIDs",
+
+			request: &services.SearchBeatsRequest{
+				Limit:         10,
+				Offset:        0,
+				Sort:          "name",
+				SortDirection: "asc",
+				CreatorIDs:    []string{"creator_id_1", "creator_id_2"},
 			},
 
 			shouldCallSearchBeatsDAO: true,
@@ -144,8 +168,9 @@ func TestSearchBeats(t *testing.T) {
 					On("Exec", context.Background(), &dao.SearchBeatsRequest{
 						Limit:         testCase.request.Limit,
 						Offset:        testCase.request.Offset,
-						Sort:          entities.SortBeat(testCase.request.Sort),
-						SortDirection: entities.SortDirection(testCase.request.SortDirection),
+						Sort:          testCase.request.Sort,
+						SortDirection: testCase.request.SortDirection,
+						CreatorIDs:    testCase.request.CreatorIDs,
 					}).
 					Return(testCase.searchBeatsDAOResponse, testCase.searchBeatsDAOError)
 			}

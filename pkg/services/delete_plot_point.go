@@ -19,7 +19,8 @@ var (
 var deletePlotPointValidate = validator.New(validator.WithRequiredStructEnabled())
 
 type DeletePlotPointRequest struct {
-	ID string `validate:"required,len=36"`
+	ID        string `validate:"required,len=36"`
+	CreatorID string `validate:"omitempty,min=1,max=128"`
 }
 
 type DeletePlotPoint interface {
@@ -40,7 +41,7 @@ func (service *deletePlotPointImpl) Exec(ctx context.Context, data *DeletePlotPo
 		return errors.Join(ErrInvalidDeletePlotPointRequest, fmt.Errorf("uuid value: '%s': %w", data.ID, err))
 	}
 
-	_, err = service.dao.Exec(ctx, plotPointID)
+	_, err = service.dao.Exec(ctx, plotPointID, data.CreatorID)
 	if err != nil {
 		return errors.Join(ErrDeletePlotPoint, err)
 	}

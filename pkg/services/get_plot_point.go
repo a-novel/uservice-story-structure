@@ -27,6 +27,7 @@ type GetPlotPointResponse struct {
 	ID        string
 	Name      string
 	Prompt    string
+	CreatorID string
 	CreatedAt time.Time
 	UpdatedAt *time.Time
 }
@@ -56,6 +57,7 @@ func (service *getPlotPointImpl) Exec(ctx context.Context, data *GetPlotPointReq
 
 	return &GetPlotPointResponse{
 		ID:        plotPoint.ID.String(),
+		CreatorID: plotPoint.CreatorID,
 		Name:      plotPoint.Name,
 		Prompt:    plotPoint.Prompt,
 		CreatedAt: plotPoint.CreatedAt,

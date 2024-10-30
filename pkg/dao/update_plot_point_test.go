@@ -20,6 +20,7 @@ func TestUpdatePlotPoint(t *testing.T) {
 	fixtures := []interface{}{
 		&entities.PlotPoint{
 			ID:        uuid.MustParse("00000000-0000-0000-0000-000000000001"),
+			CreatorID: "creator_id",
 			Name:      "Plot Point 1",
 			Prompt:    "Prompt 1",
 			CreatedAt: time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC),
@@ -42,11 +43,13 @@ func TestUpdatePlotPoint(t *testing.T) {
 			id:   uuid.MustParse("00000000-0000-0000-0000-000000000001"),
 			now:  time.Date(2021, 2, 1, 0, 0, 0, 0, time.UTC),
 			data: &dao.UpdatePlotPointRequest{
-				Name:   "Plot Point 2",
-				Prompt: "Prompt 2",
+				Name:      "Plot Point 2",
+				Prompt:    "Prompt 2",
+				CreatorID: "creator_id",
 			},
 			expect: &entities.PlotPoint{
 				ID:        uuid.MustParse("00000000-0000-0000-0000-000000000001"),
+				CreatorID: "creator_id",
 				Name:      "Plot Point 2",
 				Prompt:    "Prompt 2",
 				CreatedAt: time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC),
@@ -58,8 +61,20 @@ func TestUpdatePlotPoint(t *testing.T) {
 			id:   uuid.MustParse("00000000-0000-0000-0000-000000000002"),
 			now:  time.Date(2021, 2, 1, 0, 0, 0, 0, time.UTC),
 			data: &dao.UpdatePlotPointRequest{
-				Name:   "Beat 2",
-				Prompt: "Prompt 2",
+				Name:      "Beat 2",
+				Prompt:    "Prompt 2",
+				CreatorID: "creator_id",
+			},
+			expectErr: dao.ErrPlotPointNotFound,
+		},
+		{
+			name: "BadCreator",
+			id:   uuid.MustParse("00000000-0000-0000-0000-000000000001"),
+			now:  time.Date(2021, 2, 1, 0, 0, 0, 0, time.UTC),
+			data: &dao.UpdatePlotPointRequest{
+				Name:      "Beat 2",
+				Prompt:    "Prompt 2",
+				CreatorID: "creator_id_alt",
 			},
 			expectErr: dao.ErrPlotPointNotFound,
 		},

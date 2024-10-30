@@ -17,11 +17,17 @@ var (
 
 var searchPlotPointsValidate = validator.New(validator.WithRequiredStructEnabled())
 
+func init() {
+	searchPlotPointsValidate.RegisterCustomTypeFunc(entities.ValidateSortDirection, entities.SortDirection(""))
+	searchPlotPointsValidate.RegisterCustomTypeFunc(entities.ValidateSortPlotPoint, entities.SortPlotPoint(""))
+}
+
 type SearchPlotPointsRequest struct {
-	Limit         int    `validate:"required,min=1,max=128"`
-	Offset        int    `validate:"omitempty,min=0"`
-	Sort          string `validate:"omitempty,oneof=name created_at updated_at"`
-	SortDirection string `validate:"omitempty,oneof=asc desc"`
+	Limit         int                    `validate:"required,min=1,max=128"`
+	Offset        int                    `validate:"omitempty,min=0"`
+	Sort          entities.SortPlotPoint `validate:"omitempty,oneof=name created_at updated_at"`
+	SortDirection entities.SortDirection `validate:"omitempty,oneof=asc desc"`
+	CreatorIDs    []string               `validate:"omitempty,dive,min=1,max=128"`
 }
 
 type SearchPlotPointsResponse struct {
@@ -40,17 +46,16 @@ func (service *searchPlotPointsImpl) Exec(
 	ctx context.Context,
 	data *SearchPlotPointsRequest,
 ) (*SearchPlotPointsResponse, error) {
-	var err error
-
-	if err = searchPlotPointsValidate.Struct(data); err != nil {
+	if err := searchPlotPointsValidate.Struct(data); err != nil {
 		return nil, errors.Join(ErrInvalidSearchPlotPointsRequest, err)
 	}
 
 	ids, err := service.dao.Exec(ctx, &dao.SearchPlotPointsRequest{
 		Limit:         data.Limit,
 		Offset:        data.Offset,
-		Sort:          entities.SortPlotPoint(data.Sort),
-		SortDirection: entities.SortDirection(data.SortDirection),
+		Sort:          data.Sort,
+		SortDirection: data.SortDirection,
+		CreatorIDs:    data.CreatorIDs,
 	})
 	if err != nil {
 		return nil, errors.Join(ErrSearchPlotPoints, err)

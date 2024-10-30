@@ -16,6 +16,7 @@ type SearchBeatsRequest struct {
 	Offset        int
 	Sort          entities.SortBeat
 	SortDirection entities.SortDirection
+	CreatorIDs    []string
 }
 
 type SearchBeats interface {
@@ -52,6 +53,12 @@ func (dao *searchBeatsImpl) Exec(ctx context.Context, request *SearchBeatsReques
 		query = query.Order(sort + " " + direction)
 	} else {
 		query = query.Order("beats.name ASC")
+	}
+
+	if len(request.CreatorIDs) > 1 {
+		query = query.Where("creator_id IN (?)", bun.In(request.CreatorIDs))
+	} else if len(request.CreatorIDs) == 1 {
+		query = query.Where("creator_id = ?", request.CreatorIDs[0])
 	}
 
 	err := query.Scan(ctx, &beats)

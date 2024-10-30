@@ -35,14 +35,16 @@ func TestUpdatePlotPoint(t *testing.T) {
 			name: "OK",
 
 			request: &services.UpdatePlotPointRequest{
-				ID:     "00000000-0000-0000-0000-000000000001",
-				Name:   "name",
-				Prompt: "prompt",
+				ID:        "00000000-0000-0000-0000-000000000001",
+				Name:      "name",
+				Prompt:    "prompt",
+				CreatorID: "creator_id",
 			},
 
 			shouldCallUpdatePlotPointDAO: true,
 			updatePlotPointDAOResponse: &entities.PlotPoint{
 				ID:        uuid.MustParse("00000000-0000-0000-0000-000000000001"),
+				CreatorID: "creator_id",
 				Name:      "name",
 				Prompt:    "prompt",
 				CreatedAt: time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC),
@@ -51,6 +53,7 @@ func TestUpdatePlotPoint(t *testing.T) {
 
 			expect: &services.UpdatePlotPointResponse{
 				ID:        "00000000-0000-0000-0000-000000000001",
+				CreatorID: "creator_id",
 				Name:      "name",
 				Prompt:    "prompt",
 				CreatedAt: time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC),
@@ -62,9 +65,10 @@ func TestUpdatePlotPoint(t *testing.T) {
 			name: "DAO/Error",
 
 			request: &services.UpdatePlotPointRequest{
-				ID:     "00000000-0000-0000-0000-000000000001",
-				Name:   "name",
-				Prompt: "prompt",
+				ID:        "00000000-0000-0000-0000-000000000001",
+				Name:      "name",
+				Prompt:    "prompt",
+				CreatorID: "creator_id",
 			},
 
 			shouldCallUpdatePlotPointDAO: true,
@@ -77,9 +81,10 @@ func TestUpdatePlotPoint(t *testing.T) {
 			name: "InvalidRequest/NoName",
 
 			request: &services.UpdatePlotPointRequest{
-				ID:     "00000000-0000-0000-0000-000000000001",
-				Name:   "",
-				Prompt: "prompt",
+				ID:        "00000000-0000-0000-0000-000000000001",
+				Name:      "",
+				Prompt:    "prompt",
+				CreatorID: "creator_id",
 			},
 
 			expectErr: services.ErrInvalidUpdatePlotPointRequest,
@@ -88,9 +93,10 @@ func TestUpdatePlotPoint(t *testing.T) {
 			name: "InvalidRequest/NoPrompt",
 
 			request: &services.UpdatePlotPointRequest{
-				ID:     "00000000-0000-0000-0000-000000000001",
-				Name:   "name",
-				Prompt: "",
+				ID:        "00000000-0000-0000-0000-000000000001",
+				Name:      "name",
+				Prompt:    "",
+				CreatorID: "creator_id",
 			},
 
 			expectErr: services.ErrInvalidUpdatePlotPointRequest,
@@ -99,9 +105,10 @@ func TestUpdatePlotPoint(t *testing.T) {
 			name: "InvalidRequest/NoID",
 
 			request: &services.UpdatePlotPointRequest{
-				ID:     "",
-				Name:   "name",
-				Prompt: "prompt",
+				ID:        "",
+				Name:      "name",
+				Prompt:    "prompt",
+				CreatorID: "creator_id",
 			},
 
 			expectErr: services.ErrInvalidUpdatePlotPointRequest,
@@ -110,9 +117,10 @@ func TestUpdatePlotPoint(t *testing.T) {
 			name: "InvalidRequest/InvalidID",
 
 			request: &services.UpdatePlotPointRequest{
-				ID:     "00000000x0000x0000x0000x000000000001",
-				Name:   "name",
-				Prompt: "prompt",
+				ID:        "00000000x0000x0000x0000x000000000001",
+				Name:      "name",
+				Prompt:    "prompt",
+				CreatorID: "creator_id",
 			},
 
 			expectErr: services.ErrInvalidUpdatePlotPointRequest,
@@ -121,9 +129,10 @@ func TestUpdatePlotPoint(t *testing.T) {
 			name: "InvalidRequest/NameTooLong",
 
 			request: &services.UpdatePlotPointRequest{
-				ID:     "00000000-0000-0000-0000-000000000001",
-				Name:   strings.Repeat("a", 65),
-				Prompt: "prompt",
+				ID:        "00000000-0000-0000-0000-000000000001",
+				Name:      strings.Repeat("a", 65),
+				Prompt:    "prompt",
+				CreatorID: "creator_id",
 			},
 
 			expectErr: services.ErrInvalidUpdatePlotPointRequest,
@@ -132,9 +141,21 @@ func TestUpdatePlotPoint(t *testing.T) {
 			name: "InvalidRequest/PromptTooLong",
 
 			request: &services.UpdatePlotPointRequest{
+				ID:        "00000000-0000-0000-0000-000000000001",
+				Name:      "name",
+				Prompt:    strings.Repeat("a", 1025),
+				CreatorID: "creator_id",
+			},
+
+			expectErr: services.ErrInvalidUpdatePlotPointRequest,
+		},
+		{
+			name: "InvalidRequest/NoCreatorID",
+
+			request: &services.UpdatePlotPointRequest{
 				ID:     "00000000-0000-0000-0000-000000000001",
 				Name:   "name",
-				Prompt: strings.Repeat("a", 1025),
+				Prompt: "prompt",
 			},
 
 			expectErr: services.ErrInvalidUpdatePlotPointRequest,
@@ -153,8 +174,9 @@ func TestUpdatePlotPoint(t *testing.T) {
 						mock.MatchedBy(func(id uuid.UUID) bool { return id != uuid.Nil }),
 						mock.MatchedBy(func(at time.Time) bool { return at.Unix() > 0 }),
 						&dao.UpdatePlotPointRequest{
-							Name:   testCase.request.Name,
-							Prompt: testCase.request.Prompt,
+							Name:      testCase.request.Name,
+							Prompt:    testCase.request.Prompt,
+							CreatorID: testCase.request.CreatorID,
 						},
 					).
 					Return(testCase.updatePlotPointDAOResponse, testCase.updatePlotPointDAOError)

@@ -42,11 +42,13 @@ func TestCreateBeat(t *testing.T) {
 			id:   uuid.MustParse("00000000-0000-0000-0000-000000000002"),
 			now:  time.Date(2021, 2, 1, 0, 0, 0, 0, time.UTC),
 			data: &dao.CreateBeatRequest{
-				Name:   "Beat 2",
-				Prompt: "Prompt 2",
+				Name:      "Beat 2",
+				Prompt:    "Prompt 2",
+				CreatorID: "creator_id",
 			},
 			expect: &entities.Beat{
 				ID:        uuid.MustParse("00000000-0000-0000-0000-000000000002"),
+				CreatorID: "creator_id",
 				Name:      "Beat 2",
 				Prompt:    "Prompt 2",
 				CreatedAt: time.Date(2021, 2, 1, 0, 0, 0, 0, time.UTC),
@@ -58,11 +60,13 @@ func TestCreateBeat(t *testing.T) {
 			id:   uuid.MustParse("00000000-0000-0000-0000-000000000002"),
 			now:  time.Date(2021, 2, 1, 0, 0, 0, 0, time.UTC),
 			data: &dao.CreateBeatRequest{
-				Name:   "Beat 1",
-				Prompt: "Prompt 1",
+				Name:      "Beat 1",
+				Prompt:    "Prompt 1",
+				CreatorID: "creator_id",
 			},
 			expect: &entities.Beat{
 				ID:        uuid.MustParse("00000000-0000-0000-0000-000000000002"),
+				CreatorID: "creator_id",
 				Name:      "Beat 1",
 				Prompt:    "Prompt 1",
 				CreatedAt: time.Date(2021, 2, 1, 0, 0, 0, 0, time.UTC),

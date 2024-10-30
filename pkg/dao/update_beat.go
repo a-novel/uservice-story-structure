@@ -12,8 +12,9 @@ import (
 )
 
 type UpdateBeatRequest struct {
-	Name   string
-	Prompt string
+	Name      string
+	Prompt    string
+	CreatorID string
 }
 
 type UpdateBeat interface {
@@ -41,6 +42,7 @@ func (dao *updateBeatImpl) Exec(
 		NewUpdate().
 		Model(model).
 		WherePK().
+		Where("creator_id = ?", data.CreatorID).
 		Column("name", "prompt", "updated_at").
 		Returning("*").
 		Exec(ctx)

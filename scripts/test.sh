@@ -13,6 +13,10 @@ trap int_handler INT
 # Setup test containers.
 docker compose -f ${COMPOSE_FILE} up -d
 
+export ANOVEL_LOGGER_DYNAMIC=false
+export PORT=8080
+export DSN="postgres://test:test@localhost:5432/test?sslmode=disable"
+
 # Execute tests.
 export CGO_ENABLED=1
 go run ${TEST_TOOL_PKG} --format pkgname -- -count=1 -coverprofile=cover.out -p 1 $(go list ./... | grep -v /mocks)

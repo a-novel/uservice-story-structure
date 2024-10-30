@@ -27,6 +27,7 @@ type GetBeatResponse struct {
 	ID        string
 	Name      string
 	Prompt    string
+	CreatorID string
 	CreatedAt time.Time
 	UpdatedAt *time.Time
 }
@@ -56,6 +57,7 @@ func (service *getBeatImpl) Exec(ctx context.Context, data *GetBeatRequest) (*Ge
 
 	return &GetBeatResponse{
 		ID:        beat.ID.String(),
+		CreatorID: beat.CreatorID,
 		Name:      beat.Name,
 		Prompt:    beat.Prompt,
 		CreatedAt: beat.CreatedAt,

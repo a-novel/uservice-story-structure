@@ -20,6 +20,7 @@ func TestDeletePlotPoint(t *testing.T) {
 	fixtures := []interface{}{
 		&entities.PlotPoint{
 			ID:        uuid.MustParse("00000000-0000-0000-0000-000000000001"),
+			CreatorID: "creator_id",
 			Name:      "Plot Point 1",
 			Prompt:    "Prompt 1",
 			CreatedAt: time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC),
@@ -30,7 +31,8 @@ func TestDeletePlotPoint(t *testing.T) {
 	testCases := []struct {
 		name string
 
-		id uuid.UUID
+		id        uuid.UUID
+		creatorID string
 
 		expect    *entities.PlotPoint
 		expectErr error
@@ -40,6 +42,19 @@ func TestDeletePlotPoint(t *testing.T) {
 			id:   uuid.MustParse("00000000-0000-0000-0000-000000000001"),
 			expect: &entities.PlotPoint{
 				ID:        uuid.MustParse("00000000-0000-0000-0000-000000000001"),
+				CreatorID: "creator_id",
+				Name:      "Plot Point 1",
+				Prompt:    "Prompt 1",
+				CreatedAt: time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC),
+				UpdatedAt: lo.ToPtr(time.Date(2021, 1, 2, 0, 0, 0, 0, time.UTC)),
+			},
+		},
+		{
+			name: "Delete/CreatorID",
+			id:   uuid.MustParse("00000000-0000-0000-0000-000000000001"),
+			expect: &entities.PlotPoint{
+				ID:        uuid.MustParse("00000000-0000-0000-0000-000000000001"),
+				CreatorID: "creator_id",
 				Name:      "Plot Point 1",
 				Prompt:    "Prompt 1",
 				CreatedAt: time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC),
@@ -49,6 +64,12 @@ func TestDeletePlotPoint(t *testing.T) {
 		{
 			name:      "NotFound",
 			id:        uuid.MustParse("00000000-0000-0000-0000-000000000002"),
+			expectErr: dao.ErrPlotPointNotFound,
+		},
+		{
+			name:      "BadCreatorID",
+			id:        uuid.MustParse("00000000-0000-0000-0000-000000000001"),
+			creatorID: "creator_id_alt",
 			expectErr: dao.ErrPlotPointNotFound,
 		},
 	}
@@ -64,7 +85,7 @@ func TestDeletePlotPoint(t *testing.T) {
 
 			deletePlotPointDAO := dao.NewDeletePlotPoint(transaction)
 
-			plotPoint, err := deletePlotPointDAO.Exec(context.Background(), testCase.id)
+			plotPoint, err := deletePlotPointDAO.Exec(context.Background(), testCase.id, testCase.creatorID)
 			require.ErrorIs(t, err, testCase.expectErr)
 			require.Equal(t, testCase.expect, plotPoint)
 		})

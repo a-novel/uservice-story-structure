@@ -2,13 +2,19 @@ with-expecter: true
 packages:
   github.com/a-novel/uservice-story-structure/pkg/dao:
     config:
-      all: True
+      all: true
       recursive: true
       outpkg: daomocks
       dir: pkg/dao/mocks
   github.com/a-novel/uservice-story-structure/pkg/services:
     config:
-      all: True
+      all: true
       recursive: true
       outpkg: servicesmocks
       dir: pkg/services/mocks
+  github.com/a-novel/uservice-story-structure/pkg/handlers:
+    config:
+      all: true
+      recursive: true
+      outpkg: handlersmocks
+      dir: pkg/handlers/mocks

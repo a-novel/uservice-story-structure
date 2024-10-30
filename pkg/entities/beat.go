@@ -1,6 +1,7 @@
 package entities
 
 import (
+	"reflect"
 	"time"
 
 	"github.com/google/uuid"
@@ -11,6 +12,9 @@ import (
 // to a particular generation.
 type Beat struct {
 	bun.BaseModel `bun:"table:beats,alias:beats"`
+
+	// CreatorID is the unique identifier of the user who created the beat.
+	CreatorID string `bun:"creator_id"`
 
 	// ID is the unique identifier of the beat.
 	ID uuid.UUID `bun:"id,pk,type:uuid"`
@@ -31,3 +35,12 @@ const (
 	SortBeatCreatedAt SortBeat = "created_at"
 	SortBeatUpdatedAt SortBeat = "updated_at"
 )
+
+func ValidateSortBeat(field reflect.Value) interface{} {
+	value, ok := field.Interface().(SortBeat)
+	if !ok {
+		return nil
+	}
+
+	return string(value)
+}

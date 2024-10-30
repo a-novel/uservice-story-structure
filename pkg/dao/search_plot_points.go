@@ -16,6 +16,7 @@ type SearchPlotPointsRequest struct {
 	Offset        int
 	Sort          entities.SortPlotPoint
 	SortDirection entities.SortDirection
+	CreatorIDs    []string
 }
 
 type SearchPlotPoints interface {
@@ -52,6 +53,12 @@ func (dao *searchPlotPointsImpl) Exec(ctx context.Context, request *SearchPlotPo
 		query = query.Order(sort + " " + direction)
 	} else {
 		query = query.Order("plot_points.name ASC")
+	}
+
+	if len(request.CreatorIDs) > 1 {
+		query = query.Where("creator_id IN (?)", bun.In(request.CreatorIDs))
+	} else if len(request.CreatorIDs) == 1 {
+		query = query.Where("creator_id = ?", request.CreatorIDs[0])
 	}
 
 	err := query.Scan(ctx, &plotPoints)
