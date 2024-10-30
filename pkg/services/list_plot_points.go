@@ -29,6 +29,7 @@ type ListPlotPointsResponsePlotPoint struct {
 	ID        string
 	Name      string
 	Prompt    string
+	CreatorID string
 	CreatedAt time.Time
 	UpdatedAt *time.Time
 }
@@ -72,6 +73,7 @@ func (service *listPlotPointsImpl) Exec(
 		PlotPoints: lo.Map(plotPoints, func(item *entities.PlotPoint, _ int) *ListPlotPointsResponsePlotPoint {
 			return &ListPlotPointsResponsePlotPoint{
 				ID:        item.ID.String(),
+				CreatorID: item.CreatorID,
 				Name:      item.Name,
 				Prompt:    item.Prompt,
 				CreatedAt: item.CreatedAt,

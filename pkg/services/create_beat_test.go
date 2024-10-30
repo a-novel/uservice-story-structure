@@ -34,13 +34,15 @@ func TestCreateBeat(t *testing.T) {
 			name: "OK",
 
 			request: &services.CreateBeatRequest{
-				Name:   "name",
-				Prompt: "prompt",
+				Name:      "name",
+				Prompt:    "prompt",
+				CreatorID: "creator_id",
 			},
 
 			shouldCallCreateBeatDAO: true,
 			createBeatDAOResponse: &entities.Beat{
 				ID:        uuid.MustParse("00000000-0000-0000-0000-000000000001"),
+				CreatorID: "creator_id",
 				Name:      "name",
 				Prompt:    "prompt",
 				CreatedAt: time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC),
@@ -48,6 +50,7 @@ func TestCreateBeat(t *testing.T) {
 
 			expect: &services.CreateBeatResponse{
 				ID:        "00000000-0000-0000-0000-000000000001",
+				CreatorID: "creator_id",
 				Name:      "name",
 				Prompt:    "prompt",
 				CreatedAt: time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC),
@@ -58,8 +61,9 @@ func TestCreateBeat(t *testing.T) {
 			name: "DAO/Error",
 
 			request: &services.CreateBeatRequest{
-				Name:   "name",
-				Prompt: "prompt",
+				Name:      "name",
+				Prompt:    "prompt",
+				CreatorID: "creator_id",
 			},
 
 			shouldCallCreateBeatDAO: true,
@@ -72,8 +76,9 @@ func TestCreateBeat(t *testing.T) {
 			name: "InvalidRequest/NoName",
 
 			request: &services.CreateBeatRequest{
-				Name:   "",
-				Prompt: "prompt",
+				Name:      "",
+				Prompt:    "prompt",
+				CreatorID: "creator_id",
 			},
 
 			expectErr: services.ErrInvalidCreateBeatRequest,
@@ -82,8 +87,9 @@ func TestCreateBeat(t *testing.T) {
 			name: "InvalidRequest/NoPrompt",
 
 			request: &services.CreateBeatRequest{
-				Name:   "name",
-				Prompt: "",
+				Name:      "name",
+				Prompt:    "",
+				CreatorID: "creator_id",
 			},
 
 			expectErr: services.ErrInvalidCreateBeatRequest,
@@ -92,8 +98,9 @@ func TestCreateBeat(t *testing.T) {
 			name: "InvalidRequest/NameTooLong",
 
 			request: &services.CreateBeatRequest{
-				Name:   strings.Repeat("a", 65),
-				Prompt: "prompt",
+				Name:      strings.Repeat("a", 65),
+				Prompt:    "prompt",
+				CreatorID: "creator_id",
 			},
 
 			expectErr: services.ErrInvalidCreateBeatRequest,
@@ -102,8 +109,30 @@ func TestCreateBeat(t *testing.T) {
 			name: "InvalidRequest/PromptTooLong",
 
 			request: &services.CreateBeatRequest{
+				Name:      "name",
+				Prompt:    strings.Repeat("a", 1025),
+				CreatorID: "creator_id",
+			},
+
+			expectErr: services.ErrInvalidCreateBeatRequest,
+		},
+		{
+			name: "InvalidRequest/NoCreatorID",
+
+			request: &services.CreateBeatRequest{
 				Name:   "name",
-				Prompt: strings.Repeat("a", 1025),
+				Prompt: "prompt",
+			},
+
+			expectErr: services.ErrInvalidCreateBeatRequest,
+		},
+		{
+			name: "InvalidRequest/CreatorIDTooLong",
+
+			request: &services.CreateBeatRequest{
+				Name:      "name",
+				Prompt:    "prompt",
+				CreatorID: strings.Repeat("a", 129),
 			},
 
 			expectErr: services.ErrInvalidCreateBeatRequest,
@@ -122,8 +151,9 @@ func TestCreateBeat(t *testing.T) {
 						mock.MatchedBy(func(id uuid.UUID) bool { return id != uuid.Nil }),
 						mock.MatchedBy(func(at time.Time) bool { return at.Unix() > 0 }),
 						&dao.CreateBeatRequest{
-							Name:   testCase.request.Name,
-							Prompt: testCase.request.Prompt,
+							Name:      testCase.request.Name,
+							Prompt:    testCase.request.Prompt,
+							CreatorID: testCase.request.CreatorID,
 						},
 					).
 					Return(testCase.createBeatDAOResponse, testCase.createBeatDAOError)

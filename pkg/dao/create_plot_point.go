@@ -12,8 +12,9 @@ import (
 )
 
 type CreatePlotPointRequest struct {
-	Name   string
-	Prompt string
+	Name      string
+	Prompt    string
+	CreatorID string
 }
 
 type CreatePlotPoint interface {
@@ -32,6 +33,7 @@ func (dao *createPlotPointImpl) Exec(
 ) (*entities.PlotPoint, error) {
 	model := &entities.PlotPoint{
 		ID:        id,
+		CreatorID: data.CreatorID,
 		Name:      data.Name,
 		Prompt:    data.Prompt,
 		CreatedAt: now,

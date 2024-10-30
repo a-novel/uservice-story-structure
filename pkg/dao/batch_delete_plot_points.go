@@ -11,22 +11,33 @@ import (
 )
 
 type BatchDeletePlotPoints interface {
-	Exec(ctx context.Context, ids uuid.UUIDs) ([]*entities.PlotPoint, error)
+	Exec(ctx context.Context, ids uuid.UUIDs, creatorID string) ([]*entities.PlotPoint, error)
 }
 
 type batchDeletePlotPointsImpl struct {
 	database bun.IDB
 }
 
-func (dao *batchDeletePlotPointsImpl) Exec(ctx context.Context, ids uuid.UUIDs) ([]*entities.PlotPoint, error) {
-	beats := make([]*entities.PlotPoint, 0)
+func (dao *batchDeletePlotPointsImpl) Exec(
+	ctx context.Context, ids uuid.UUIDs, creatorID string,
+) ([]*entities.PlotPoint, error) {
+	plotPoints := make([]*entities.PlotPoint, 0)
 
-	_, err := dao.database.NewDelete().Model(&beats).Where("id IN (?)", bun.In(ids)).Returning("*").Exec(ctx)
+	query := dao.database.NewDelete().
+		Model(&plotPoints).
+		Where("id IN (?)", bun.In(ids)).
+		Returning("*")
+
+	if creatorID != "" {
+		query = query.Where("creator_id = ?", creatorID)
+	}
+
+	_, err := query.Exec(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("exec query: %w", err)
 	}
 
-	return beats, nil
+	return plotPoints, nil
 }
 
 func NewBatchDeletePlotPoints(database bun.IDB) BatchDeletePlotPoints {

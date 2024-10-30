@@ -19,7 +19,8 @@ var (
 var deleteBeatValidate = validator.New(validator.WithRequiredStructEnabled())
 
 type DeleteBeatRequest struct {
-	ID string `validate:"required,len=36"`
+	ID        string `validate:"required,len=36"`
+	CreatorID string `validate:"omitempty,min=1,max=128"`
 }
 
 type DeleteBeat interface {
@@ -40,7 +41,7 @@ func (service *deleteBeatImpl) Exec(ctx context.Context, data *DeleteBeatRequest
 		return errors.Join(ErrInvalidDeleteBeatRequest, fmt.Errorf("uuid value: '%s': %w", data.ID, err))
 	}
 
-	_, err = service.dao.Exec(ctx, beatID)
+	_, err = service.dao.Exec(ctx, beatID, data.CreatorID)
 	if err != nil {
 		return errors.Join(ErrDeleteBeat, err)
 	}

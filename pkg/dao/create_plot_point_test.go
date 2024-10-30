@@ -42,11 +42,13 @@ func TestCreatePlotPoint(t *testing.T) {
 			id:   uuid.MustParse("00000000-0000-0000-0000-000000000002"),
 			now:  time.Date(2021, 2, 1, 0, 0, 0, 0, time.UTC),
 			data: &dao.CreatePlotPointRequest{
-				Name:   "Plot Point 2",
-				Prompt: "Prompt 2",
+				Name:      "Plot Point 2",
+				Prompt:    "Prompt 2",
+				CreatorID: "creator_id",
 			},
 			expect: &entities.PlotPoint{
 				ID:        uuid.MustParse("00000000-0000-0000-0000-000000000002"),
+				CreatorID: "creator_id",
 				Name:      "Plot Point 2",
 				Prompt:    "Prompt 2",
 				CreatedAt: time.Date(2021, 2, 1, 0, 0, 0, 0, time.UTC),
@@ -58,11 +60,13 @@ func TestCreatePlotPoint(t *testing.T) {
 			id:   uuid.MustParse("00000000-0000-0000-0000-000000000002"),
 			now:  time.Date(2021, 2, 1, 0, 0, 0, 0, time.UTC),
 			data: &dao.CreatePlotPointRequest{
-				Name:   "Plot Point 1",
-				Prompt: "Prompt 1",
+				Name:      "Plot Point 1",
+				Prompt:    "Prompt 1",
+				CreatorID: "creator_id",
 			},
 			expect: &entities.PlotPoint{
 				ID:        uuid.MustParse("00000000-0000-0000-0000-000000000002"),
+				CreatorID: "creator_id",
 				Name:      "Plot Point 1",
 				Prompt:    "Prompt 1",
 				CreatedAt: time.Date(2021, 2, 1, 0, 0, 0, 0, time.UTC),

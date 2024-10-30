@@ -29,6 +29,7 @@ type ListBeatsResponseBeat struct {
 	ID        string
 	Name      string
 	Prompt    string
+	CreatorID string
 	CreatedAt time.Time
 	UpdatedAt *time.Time
 }
@@ -69,6 +70,7 @@ func (service *listBeatsImpl) Exec(ctx context.Context, data *ListBeatsRequest) 
 		Beats: lo.Map(beats, func(item *entities.Beat, _ int) *ListBeatsResponseBeat {
 			return &ListBeatsResponseBeat{
 				ID:        item.ID.String(),
+				CreatorID: item.CreatorID,
 				Name:      item.Name,
 				Prompt:    item.Prompt,
 				CreatedAt: item.CreatedAt,

@@ -11,17 +11,25 @@ import (
 )
 
 type DeleteBeat interface {
-	Exec(ctx context.Context, id uuid.UUID) (*entities.Beat, error)
+	Exec(ctx context.Context, id uuid.UUID, creatorID string) (*entities.Beat, error)
 }
 
 type deleteBeatImpl struct {
 	database bun.IDB
 }
 
-func (dao *deleteBeatImpl) Exec(ctx context.Context, id uuid.UUID) (*entities.Beat, error) {
+func (dao *deleteBeatImpl) Exec(
+	ctx context.Context, id uuid.UUID, creatorID string,
+) (*entities.Beat, error) {
 	beat := &entities.Beat{ID: id}
 
-	res, err := dao.database.NewDelete().Model(beat).WherePK().Returning("*").Exec(ctx)
+	query := dao.database.NewDelete().Model(beat).WherePK().Returning("*")
+
+	if creatorID != "" {
+		query.Where("creator_id = ?", creatorID)
+	}
+
+	res, err := query.Exec(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("exec query: %w", err)
 	}

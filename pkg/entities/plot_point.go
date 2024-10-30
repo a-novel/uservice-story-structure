@@ -1,6 +1,7 @@
 package entities
 
 import (
+	"reflect"
 	"time"
 
 	"github.com/google/uuid"
@@ -10,6 +11,9 @@ import (
 // PlotPoint is the main instruction used to generate a plot point. A plot point is shaped by multiple beats.
 type PlotPoint struct {
 	bun.BaseModel `bun:"table:plot_points,alias:plot_points"`
+
+	// CreatorID is the unique identifier of the user who created the plot point.
+	CreatorID string `bun:"creator_id"`
 
 	// ID is the unique identifier of the plot point.
 	ID uuid.UUID `bun:"id,pk,type:uuid"`
@@ -30,3 +34,12 @@ const (
 	SortPlotPointCreatedAt SortPlotPoint = "created_at"
 	SortPlotPointUpdatedAt SortPlotPoint = "updated_at"
 )
+
+func ValidateSortPlotPoint(field reflect.Value) interface{} {
+	value, ok := field.Interface().(SortPlotPoint)
+	if !ok {
+		return nil
+	}
+
+	return string(value)
+}

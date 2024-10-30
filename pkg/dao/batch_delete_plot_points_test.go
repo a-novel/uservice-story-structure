@@ -20,6 +20,7 @@ func TestBatchDeletePlotPoints(t *testing.T) {
 	fixtures := []interface{}{
 		&entities.PlotPoint{
 			ID:        uuid.MustParse("00000000-0000-0000-0000-000000000001"),
+			CreatorID: "creator_id_1",
 			Name:      "Plot Point 1",
 			Prompt:    "Prompt 1",
 			CreatedAt: time.Date(2021, 3, 1, 0, 0, 0, 0, time.UTC),
@@ -27,6 +28,7 @@ func TestBatchDeletePlotPoints(t *testing.T) {
 		},
 		&entities.PlotPoint{
 			ID:        uuid.MustParse("00000000-0000-0000-0000-000000000002"),
+			CreatorID: "creator_id_2",
 			Name:      "Plot Point 2",
 			Prompt:    "Prompt 2",
 			CreatedAt: time.Date(2021, 2, 1, 0, 0, 0, 0, time.UTC),
@@ -34,6 +36,7 @@ func TestBatchDeletePlotPoints(t *testing.T) {
 		},
 		&entities.PlotPoint{
 			ID:        uuid.MustParse("00000000-0000-0000-0000-000000000003"),
+			CreatorID: "creator_id_1",
 			Name:      "Plot Point 3",
 			Prompt:    "Prompt 3",
 			CreatedAt: time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC),
@@ -44,7 +47,8 @@ func TestBatchDeletePlotPoints(t *testing.T) {
 	testCases := []struct {
 		name string
 
-		ids uuid.UUIDs
+		ids       uuid.UUIDs
+		creatorID string
 
 		expect    []*entities.PlotPoint
 		expectErr error
@@ -58,6 +62,7 @@ func TestBatchDeletePlotPoints(t *testing.T) {
 			expect: []*entities.PlotPoint{
 				{
 					ID:        uuid.MustParse("00000000-0000-0000-0000-000000000001"),
+					CreatorID: "creator_id_1",
 					Name:      "Plot Point 1",
 					Prompt:    "Prompt 1",
 					CreatedAt: time.Date(2021, 3, 1, 0, 0, 0, 0, time.UTC),
@@ -65,10 +70,29 @@ func TestBatchDeletePlotPoints(t *testing.T) {
 				},
 				{
 					ID:        uuid.MustParse("00000000-0000-0000-0000-000000000002"),
+					CreatorID: "creator_id_2",
 					Name:      "Plot Point 2",
 					Prompt:    "Prompt 2",
 					CreatedAt: time.Date(2021, 2, 1, 0, 0, 0, 0, time.UTC),
 					UpdatedAt: lo.ToPtr(time.Date(2021, 4, 2, 0, 0, 0, 0, time.UTC)),
+				},
+			},
+		},
+		{
+			name: "Delete",
+			ids: uuid.UUIDs{
+				uuid.MustParse("00000000-0000-0000-0000-000000000001"),
+				uuid.MustParse("00000000-0000-0000-0000-000000000002"),
+			},
+			creatorID: "creator_id_1",
+			expect: []*entities.PlotPoint{
+				{
+					ID:        uuid.MustParse("00000000-0000-0000-0000-000000000001"),
+					CreatorID: "creator_id_1",
+					Name:      "Plot Point 1",
+					Prompt:    "Prompt 1",
+					CreatedAt: time.Date(2021, 3, 1, 0, 0, 0, 0, time.UTC),
+					UpdatedAt: lo.ToPtr(time.Date(2021, 3, 2, 0, 0, 0, 0, time.UTC)),
 				},
 			},
 		},
@@ -82,6 +106,7 @@ func TestBatchDeletePlotPoints(t *testing.T) {
 			expect: []*entities.PlotPoint{
 				{
 					ID:        uuid.MustParse("00000000-0000-0000-0000-000000000001"),
+					CreatorID: "creator_id_1",
 					Name:      "Plot Point 1",
 					Prompt:    "Prompt 1",
 					CreatedAt: time.Date(2021, 3, 1, 0, 0, 0, 0, time.UTC),
@@ -89,6 +114,7 @@ func TestBatchDeletePlotPoints(t *testing.T) {
 				},
 				{
 					ID:        uuid.MustParse("00000000-0000-0000-0000-000000000002"),
+					CreatorID: "creator_id_2",
 					Name:      "Plot Point 2",
 					Prompt:    "Prompt 2",
 					CreatedAt: time.Date(2021, 2, 1, 0, 0, 0, 0, time.UTC),
@@ -116,7 +142,7 @@ func TestBatchDeletePlotPoints(t *testing.T) {
 
 			deletePlotPointDAO := dao.NewBatchDeletePlotPoints(transaction)
 
-			res, err := deletePlotPointDAO.Exec(context.Background(), testCase.ids)
+			res, err := deletePlotPointDAO.Exec(context.Background(), testCase.ids, testCase.creatorID)
 			require.ErrorIs(t, err, testCase.expectErr)
 			require.Equal(t, testCase.expect, res)
 		})

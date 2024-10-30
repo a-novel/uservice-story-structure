@@ -21,14 +21,16 @@ var createBeatValidate = validator.New(validator.WithRequiredStructEnabled())
 // CreateBeatRequest is the request structure for updating a beat.
 // Note: ensure the constraints on name and prompt matches the ones defined on UpdateBeatRequest.
 type CreateBeatRequest struct {
-	Name   string `validate:"required,min=2,max=64"`
-	Prompt string `validate:"required,min=2,max=1024"`
+	Name      string `validate:"required,min=2,max=64"`
+	Prompt    string `validate:"required,min=2,max=1024"`
+	CreatorID string `validate:"required,min=1,max=128"`
 }
 
 type CreateBeatResponse struct {
 	ID        string
 	Name      string
 	Prompt    string
+	CreatorID string
 	CreatedAt time.Time
 }
 
@@ -46,8 +48,9 @@ func (service *createBeatImpl) Exec(ctx context.Context, data *CreateBeatRequest
 	}
 
 	request := &dao.CreateBeatRequest{
-		Name:   data.Name,
-		Prompt: data.Prompt,
+		Name:      data.Name,
+		Prompt:    data.Prompt,
+		CreatorID: data.CreatorID,
 	}
 
 	beat, err := service.dao.Exec(ctx, uuid.New(), time.Now(), request)
@@ -57,6 +60,7 @@ func (service *createBeatImpl) Exec(ctx context.Context, data *CreateBeatRequest
 
 	return &CreateBeatResponse{
 		ID:        beat.ID.String(),
+		CreatorID: data.CreatorID,
 		Name:      beat.Name,
 		Prompt:    beat.Prompt,
 		CreatedAt: beat.CreatedAt,

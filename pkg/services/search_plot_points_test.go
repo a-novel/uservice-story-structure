@@ -10,7 +10,6 @@ import (
 
 	"github.com/a-novel/uservice-story-structure/pkg/dao"
 	daomocks "github.com/a-novel/uservice-story-structure/pkg/dao/mocks"
-	"github.com/a-novel/uservice-story-structure/pkg/entities"
 	"github.com/a-novel/uservice-story-structure/pkg/services"
 )
 
@@ -56,6 +55,31 @@ func TestSearchPlotPoints(t *testing.T) {
 
 			request: &services.SearchPlotPointsRequest{
 				Limit: 10,
+			},
+
+			shouldCallSearchPlotPointsDAO: true,
+
+			searchPlotPointsDAOResponse: uuid.UUIDs{
+				uuid.MustParse("00000000-0000-0000-0000-000000000001"),
+				uuid.MustParse("00000000-0000-0000-0000-000000000002"),
+			},
+
+			expect: &services.SearchPlotPointsResponse{
+				IDs: []string{
+					"00000000-0000-0000-0000-000000000001",
+					"00000000-0000-0000-0000-000000000002",
+				},
+			},
+		},
+		{
+			name: "OK/CreatorIDs",
+
+			request: &services.SearchPlotPointsRequest{
+				Limit:         10,
+				Offset:        0,
+				Sort:          "name",
+				SortDirection: "asc",
+				CreatorIDs:    []string{"creator_id_1", "creator_id_2"},
 			},
 
 			shouldCallSearchPlotPointsDAO: true,
@@ -144,8 +168,9 @@ func TestSearchPlotPoints(t *testing.T) {
 					On("Exec", context.Background(), &dao.SearchPlotPointsRequest{
 						Limit:         testCase.request.Limit,
 						Offset:        testCase.request.Offset,
-						Sort:          entities.SortPlotPoint(testCase.request.Sort),
-						SortDirection: entities.SortDirection(testCase.request.SortDirection),
+						Sort:          testCase.request.Sort,
+						SortDirection: testCase.request.SortDirection,
+						CreatorIDs:    testCase.request.CreatorIDs,
 					}).
 					Return(testCase.searchPlotPointsDAOResponse, testCase.searchPlotPointsDAOError)
 			}

@@ -37,6 +37,25 @@ func TestDeleteBeat(t *testing.T) {
 			shouldCallDeleteBeatDAO: true,
 			deleteBeatDAOResponse: &entities.Beat{
 				ID:        uuid.MustParse("00000000-0000-0000-0000-000000000001"),
+				CreatorID: "creator_id",
+				Name:      "name",
+				Prompt:    "prompt",
+				CreatedAt: time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC),
+				UpdatedAt: lo.ToPtr(time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC)),
+			},
+		},
+		{
+			name: "OK/CreatorID",
+
+			request: &services.DeleteBeatRequest{
+				ID:        "00000000-0000-0000-0000-000000000001",
+				CreatorID: "creator_id",
+			},
+
+			shouldCallDeleteBeatDAO: true,
+			deleteBeatDAOResponse: &entities.Beat{
+				ID:        uuid.MustParse("00000000-0000-0000-0000-000000000001"),
+				CreatorID: "creator_id",
 				Name:      "name",
 				Prompt:    "prompt",
 				CreatedAt: time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC),
@@ -93,6 +112,7 @@ func TestDeleteBeat(t *testing.T) {
 						"Exec",
 						context.Background(),
 						uuid.MustParse(testCase.request.ID),
+						testCase.request.CreatorID,
 					).
 					Return(testCase.deleteBeatDAOResponse, testCase.deleteBeatDAOError)
 			}

@@ -12,8 +12,9 @@ import (
 )
 
 type CreateBeatRequest struct {
-	Name   string
-	Prompt string
+	Name      string
+	Prompt    string
+	CreatorID string
 }
 
 type CreateBeat interface {
@@ -32,6 +33,7 @@ func (dao *createBeatImpl) Exec(
 ) (*entities.Beat, error) {
 	model := &entities.Beat{
 		ID:        id,
+		CreatorID: data.CreatorID,
 		Name:      data.Name,
 		Prompt:    data.Prompt,
 		CreatedAt: now,

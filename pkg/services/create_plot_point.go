@@ -21,14 +21,16 @@ var createPlotPointValidate = validator.New(validator.WithRequiredStructEnabled(
 // CreatePlotPointRequest is the request structure for updating a plot point.
 // Note: ensure the constraints on name and prompt matches the ones defined on UpdatePlotPointRequest.
 type CreatePlotPointRequest struct {
-	Name   string `validate:"required,min=2,max=64"`
-	Prompt string `validate:"required,min=2,max=1024"`
+	Name      string `validate:"required,min=2,max=64"`
+	Prompt    string `validate:"required,min=2,max=1024"`
+	CreatorID string `validate:"required,min=1,max=128"`
 }
 
 type CreatePlotPointResponse struct {
 	ID        string
 	Name      string
 	Prompt    string
+	CreatorID string
 	CreatedAt time.Time
 }
 
@@ -49,8 +51,9 @@ func (service *createPlotPointImpl) Exec(
 	}
 
 	request := &dao.CreatePlotPointRequest{
-		Name:   data.Name,
-		Prompt: data.Prompt,
+		Name:      data.Name,
+		Prompt:    data.Prompt,
+		CreatorID: data.CreatorID,
 	}
 
 	plotPoint, err := service.dao.Exec(ctx, uuid.New(), time.Now(), request)
@@ -60,6 +63,7 @@ func (service *createPlotPointImpl) Exec(
 
 	return &CreatePlotPointResponse{
 		ID:        plotPoint.ID.String(),
+		CreatorID: plotPoint.CreatorID,
 		Name:      plotPoint.Name,
 		Prompt:    plotPoint.Prompt,
 		CreatedAt: plotPoint.CreatedAt,

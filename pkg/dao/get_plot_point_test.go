@@ -20,6 +20,7 @@ func TestGetPlotPoint(t *testing.T) {
 	fixtures := []interface{}{
 		&entities.PlotPoint{
 			ID:        uuid.MustParse("00000000-0000-0000-0000-000000000001"),
+			CreatorID: "creator_id",
 			Name:      "Plot Point 1",
 			Prompt:    "Prompt 1",
 			CreatedAt: time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC),
@@ -40,6 +41,7 @@ func TestGetPlotPoint(t *testing.T) {
 			id:   uuid.MustParse("00000000-0000-0000-0000-000000000001"),
 			expect: &entities.PlotPoint{
 				ID:        uuid.MustParse("00000000-0000-0000-0000-000000000001"),
+				CreatorID: "creator_id",
 				Name:      "Plot Point 1",
 				Prompt:    "Prompt 1",
 				CreatedAt: time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC),

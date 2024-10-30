@@ -20,6 +20,7 @@ func TestDeleteBeat(t *testing.T) {
 	fixtures := []interface{}{
 		&entities.Beat{
 			ID:        uuid.MustParse("00000000-0000-0000-0000-000000000001"),
+			CreatorID: "creator_id",
 			Name:      "Beat 1",
 			Prompt:    "Prompt 1",
 			CreatedAt: time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC),
@@ -30,7 +31,8 @@ func TestDeleteBeat(t *testing.T) {
 	testCases := []struct {
 		name string
 
-		id uuid.UUID
+		id        uuid.UUID
+		creatorID string
 
 		expect    *entities.Beat
 		expectErr error
@@ -40,6 +42,20 @@ func TestDeleteBeat(t *testing.T) {
 			id:   uuid.MustParse("00000000-0000-0000-0000-000000000001"),
 			expect: &entities.Beat{
 				ID:        uuid.MustParse("00000000-0000-0000-0000-000000000001"),
+				CreatorID: "creator_id",
+				Name:      "Beat 1",
+				Prompt:    "Prompt 1",
+				CreatedAt: time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC),
+				UpdatedAt: lo.ToPtr(time.Date(2021, 1, 2, 0, 0, 0, 0, time.UTC)),
+			},
+		},
+		{
+			name:      "Delete/CreatorID",
+			id:        uuid.MustParse("00000000-0000-0000-0000-000000000001"),
+			creatorID: "creator_id",
+			expect: &entities.Beat{
+				ID:        uuid.MustParse("00000000-0000-0000-0000-000000000001"),
+				CreatorID: "creator_id",
 				Name:      "Beat 1",
 				Prompt:    "Prompt 1",
 				CreatedAt: time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC),
@@ -49,6 +65,12 @@ func TestDeleteBeat(t *testing.T) {
 		{
 			name:      "NotFound",
 			id:        uuid.MustParse("00000000-0000-0000-0000-000000000002"),
+			expectErr: dao.ErrBeatNotFound,
+		},
+		{
+			name:      "BadCreatorID",
+			id:        uuid.MustParse("00000000-0000-0000-0000-000000000001"),
+			creatorID: "creator_id_alt",
 			expectErr: dao.ErrBeatNotFound,
 		},
 	}
@@ -64,7 +86,7 @@ func TestDeleteBeat(t *testing.T) {
 
 			deleteBeatDAO := dao.NewDeleteBeat(transaction)
 
-			beat, err := deleteBeatDAO.Exec(context.Background(), testCase.id)
+			beat, err := deleteBeatDAO.Exec(context.Background(), testCase.id, testCase.creatorID)
 			require.ErrorIs(t, err, testCase.expectErr)
 			require.Equal(t, testCase.expect, beat)
 		})

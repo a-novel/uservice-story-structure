@@ -17,11 +17,17 @@ var (
 
 var searchBeatsValidate = validator.New(validator.WithRequiredStructEnabled())
 
+func init() {
+	searchBeatsValidate.RegisterCustomTypeFunc(entities.ValidateSortDirection, entities.SortDirection(""))
+	searchBeatsValidate.RegisterCustomTypeFunc(entities.ValidateSortBeat, entities.SortBeat(""))
+}
+
 type SearchBeatsRequest struct {
-	Limit         int    `validate:"required,min=1,max=128"`
-	Offset        int    `validate:"omitempty,min=0"`
-	Sort          string `validate:"omitempty,oneof=name created_at updated_at"`
-	SortDirection string `validate:"omitempty,oneof=asc desc"`
+	Limit         int                    `validate:"required,min=1,max=128"`
+	Offset        int                    `validate:"omitempty,min=0"`
+	Sort          entities.SortBeat      `validate:"omitempty,oneof=name created_at updated_at"`
+	SortDirection entities.SortDirection `validate:"omitempty,oneof=asc desc"`
+	CreatorIDs    []string               `validate:"omitempty,dive,min=1,max=128"`
 }
 
 type SearchBeatsResponse struct {
@@ -37,17 +43,16 @@ type searchBeatsImpl struct {
 }
 
 func (service *searchBeatsImpl) Exec(ctx context.Context, data *SearchBeatsRequest) (*SearchBeatsResponse, error) {
-	var err error
-
-	if err = searchBeatsValidate.Struct(data); err != nil {
+	if err := searchBeatsValidate.Struct(data); err != nil {
 		return nil, errors.Join(ErrInvalidSearchBeatsRequest, err)
 	}
 
 	ids, err := service.dao.Exec(ctx, &dao.SearchBeatsRequest{
 		Limit:         data.Limit,
 		Offset:        data.Offset,
-		Sort:          entities.SortBeat(data.Sort),
-		SortDirection: entities.SortDirection(data.SortDirection),
+		Sort:          data.Sort,
+		SortDirection: data.SortDirection,
+		CreatorIDs:    data.CreatorIDs,
 	})
 	if err != nil {
 		return nil, errors.Join(ErrSearchBeats, err)

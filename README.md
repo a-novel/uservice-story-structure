@@ -8,7 +8,7 @@
 
 ![Coverage graph](https://codecov.io/gh/a-novel/uservice-story-structure/graphs/sunburst.svg?token=AR0GMEYZ4O)
 
-Story structure microservice.
+Handles the default beats and plot points provided to the Agora application.
 
 ### Prerequisites
 
@@ -31,6 +31,12 @@ Install the project dependencies.
 
 ```bash
 go get ./... && go mod tidy
+```
+
+## Run the project locally
+
+```bash
+make run
 ```
 
 ## Work on the project

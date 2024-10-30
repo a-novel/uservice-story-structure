@@ -36,12 +36,14 @@ func TestBatchDeletePlotPoints(t *testing.T) {
 					"00000000-0000-0000-0000-000000000001",
 					"00000000-0000-0000-0000-000000000002",
 				},
+				CreatorID: "creator_id",
 			},
 
 			shouldCallBatchDeletePlotPointsDAO: true,
 			batchDeletePlotPointsDAOResponse: []*entities.PlotPoint{
 				{
 					ID:        uuid.MustParse("00000000-0000-0000-0000-000000000001"),
+					CreatorID: "creator_id",
 					Name:      "PlotPoint 1",
 					Prompt:    "Prompt 1",
 					CreatedAt: time.Date(2021, 3, 1, 0, 0, 0, 0, time.UTC),
@@ -49,6 +51,37 @@ func TestBatchDeletePlotPoints(t *testing.T) {
 				},
 				{
 					ID:        uuid.MustParse("00000000-0000-0000-0000-000000000002"),
+					CreatorID: "creator_id",
+					Name:      "PlotPoint 2",
+					Prompt:    "Prompt 2",
+					CreatedAt: time.Date(2021, 2, 1, 0, 0, 0, 0, time.UTC),
+					UpdatedAt: lo.ToPtr(time.Date(2021, 4, 2, 0, 0, 0, 0, time.UTC)),
+				},
+			},
+		},
+		{
+			name: "OK/NoCreatorID",
+
+			request: &services.BatchDeletePlotPointsRequest{
+				IDs: []string{
+					"00000000-0000-0000-0000-000000000001",
+					"00000000-0000-0000-0000-000000000002",
+				},
+			},
+
+			shouldCallBatchDeletePlotPointsDAO: true,
+			batchDeletePlotPointsDAOResponse: []*entities.PlotPoint{
+				{
+					ID:        uuid.MustParse("00000000-0000-0000-0000-000000000001"),
+					CreatorID: "creator_id",
+					Name:      "PlotPoint 1",
+					Prompt:    "Prompt 1",
+					CreatedAt: time.Date(2021, 3, 1, 0, 0, 0, 0, time.UTC),
+					UpdatedAt: lo.ToPtr(time.Date(2021, 3, 2, 0, 0, 0, 0, time.UTC)),
+				},
+				{
+					ID:        uuid.MustParse("00000000-0000-0000-0000-000000000002"),
+					CreatorID: "creator_id",
 					Name:      "PlotPoint 2",
 					Prompt:    "Prompt 2",
 					CreatedAt: time.Date(2021, 2, 1, 0, 0, 0, 0, time.UTC),
@@ -136,6 +169,7 @@ func TestBatchDeletePlotPoints(t *testing.T) {
 
 							return true
 						}),
+						testCase.request.CreatorID,
 					).
 					Return(testCase.batchDeletePlotPointsDAOResponse, testCase.batchDeletePlotPointsDAOError)
 			}

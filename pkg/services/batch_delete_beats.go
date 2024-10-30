@@ -19,7 +19,8 @@ var (
 var batchDeleteBeatsValidate = validator.New(validator.WithRequiredStructEnabled())
 
 type BatchDeleteBeatsRequest struct {
-	IDs []string `validate:"required,min=1,max=128,dive,required,len=36"`
+	IDs       []string `validate:"required,min=1,max=128,dive,required,len=36"`
+	CreatorID string   `validate:"omitempty,min=1,max=128"`
 }
 
 type BatchDeleteBeats interface {
@@ -45,7 +46,7 @@ func (service *batchDeleteBeatsImpl) Exec(ctx context.Context, data *BatchDelete
 		}
 	}
 
-	_, err = service.dao.Exec(ctx, beatIDs)
+	_, err = service.dao.Exec(ctx, beatIDs, data.CreatorID)
 	if err != nil {
 		return errors.Join(ErrBatchDeleteBeats, err)
 	}

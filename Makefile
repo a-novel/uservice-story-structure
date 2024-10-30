@@ -13,10 +13,13 @@ format:
 		--skip-generated \
 		-s standard -s default \
 		-s "prefix(github.com/a-novel/golib)" \
-		-s "prefix(github.com/a-novel/proto)" \
+		-s "prefix(buf.build/gen/go/a-novel)" \
 		-s "prefix(github.com/a-novel/uservice-story-structure)" \
 		.
 	go run mvdan.cc/gofumpt@latest -l -w .
 	go mod tidy
 
-PHONY: test lint format
+run:
+	bash -c "set -m; bash '$(CURDIR)/scripts/run.sh'"
+
+.PHONY: run test lint format

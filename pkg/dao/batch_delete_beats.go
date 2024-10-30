@@ -11,17 +11,28 @@ import (
 )
 
 type BatchDeleteBeats interface {
-	Exec(ctx context.Context, ids uuid.UUIDs) ([]*entities.Beat, error)
+	Exec(ctx context.Context, ids uuid.UUIDs, creatorID string) ([]*entities.Beat, error)
 }
 
 type batchDeleteBeatsImpl struct {
 	database bun.IDB
 }
 
-func (dao *batchDeleteBeatsImpl) Exec(ctx context.Context, ids uuid.UUIDs) ([]*entities.Beat, error) {
+func (dao *batchDeleteBeatsImpl) Exec(
+	ctx context.Context, ids uuid.UUIDs, creatorID string,
+) ([]*entities.Beat, error) {
 	beats := make([]*entities.Beat, 0)
 
-	_, err := dao.database.NewDelete().Model(&beats).Where("id IN (?)", bun.In(ids)).Returning("*").Exec(ctx)
+	query := dao.database.NewDelete().
+		Model(&beats).
+		Where("id IN (?)", bun.In(ids)).
+		Returning("*")
+
+	if creatorID != "" {
+		query = query.Where("creator_id = ?", creatorID)
+	}
+
+	_, err := query.Exec(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("exec query: %w", err)
 	}

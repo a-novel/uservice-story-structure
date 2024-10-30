@@ -11,17 +11,25 @@ import (
 )
 
 type DeletePlotPoint interface {
-	Exec(ctx context.Context, id uuid.UUID) (*entities.PlotPoint, error)
+	Exec(ctx context.Context, id uuid.UUID, creatorID string) (*entities.PlotPoint, error)
 }
 
 type deletePlotPointImpl struct {
 	database bun.IDB
 }
 
-func (dao *deletePlotPointImpl) Exec(ctx context.Context, id uuid.UUID) (*entities.PlotPoint, error) {
+func (dao *deletePlotPointImpl) Exec(
+	ctx context.Context, id uuid.UUID, creatorID string,
+) (*entities.PlotPoint, error) {
 	plotPoint := &entities.PlotPoint{ID: id}
 
-	res, err := dao.database.NewDelete().Model(plotPoint).WherePK().Returning("*").Exec(ctx)
+	query := dao.database.NewDelete().Model(plotPoint).WherePK().Returning("*")
+
+	if creatorID != "" {
+		query.Where("creator_id = ?", creatorID)
+	}
+
+	res, err := query.Exec(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("exec query: %w", err)
 	}

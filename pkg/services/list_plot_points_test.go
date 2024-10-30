@@ -43,6 +43,7 @@ func TestListPlotPoints(t *testing.T) {
 			listPlotPointsDAOResponse: []*entities.PlotPoint{
 				{
 					ID:        uuid.MustParse("00000000-0000-0000-0000-000000000001"),
+					CreatorID: "creator_id_1",
 					Name:      "Plot Point 1",
 					Prompt:    "Prompt 1",
 					CreatedAt: time.Date(2021, 3, 1, 0, 0, 0, 0, time.UTC),
@@ -50,6 +51,7 @@ func TestListPlotPoints(t *testing.T) {
 				},
 				{
 					ID:        uuid.MustParse("00000000-0000-0000-0000-000000000002"),
+					CreatorID: "creator_id_2",
 					Name:      "Plot Point 2",
 					Prompt:    "Prompt 2",
 					CreatedAt: time.Date(2021, 2, 1, 0, 0, 0, 0, time.UTC),
@@ -61,6 +63,7 @@ func TestListPlotPoints(t *testing.T) {
 				PlotPoints: []*services.ListPlotPointsResponsePlotPoint{
 					{
 						ID:        "00000000-0000-0000-0000-000000000001",
+						CreatorID: "creator_id_1",
 						Name:      "Plot Point 1",
 						Prompt:    "Prompt 1",
 						CreatedAt: time.Date(2021, 3, 1, 0, 0, 0, 0, time.UTC),
@@ -68,6 +71,7 @@ func TestListPlotPoints(t *testing.T) {
 					},
 					{
 						ID:        "00000000-0000-0000-0000-000000000002",
+						CreatorID: "creator_id_2",
 						Name:      "Plot Point 2",
 						Prompt:    "Prompt 2",
 						CreatedAt: time.Date(2021, 2, 1, 0, 0, 0, 0, time.UTC),
