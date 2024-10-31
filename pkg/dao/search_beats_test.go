@@ -248,7 +248,7 @@ func TestSearchBeats(t *testing.T) {
 
 		// Filter: creator_ids
 		{
-			name: "OK",
+			name: "Filter/CreatorIDs",
 			request: &dao.SearchBeatsRequest{
 				Limit:      3,
 				Offset:     0,
@@ -260,7 +260,7 @@ func TestSearchBeats(t *testing.T) {
 			},
 		},
 		{
-			name: "OK",
+			name: "Filter/CreatorIDsEmpty",
 			request: &dao.SearchBeatsRequest{
 				Limit:      3,
 				Offset:     0,

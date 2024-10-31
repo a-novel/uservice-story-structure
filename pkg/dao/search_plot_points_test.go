@@ -248,7 +248,7 @@ func TestSearchPlotPoints(t *testing.T) {
 
 		// Filter: creator_ids
 		{
-			name: "OK",
+			name: "Filter/CreatorIDs",
 			request: &dao.SearchPlotPointsRequest{
 				Limit:      3,
 				Offset:     0,
@@ -260,7 +260,7 @@ func TestSearchPlotPoints(t *testing.T) {
 			},
 		},
 		{
-			name: "OK",
+			name: "Filter/CreatorIDs/Single",
 			request: &dao.SearchPlotPointsRequest{
 				Limit:      3,
 				Offset:     0,
