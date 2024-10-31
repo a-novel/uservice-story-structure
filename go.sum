@@ -1,5 +1,5 @@
-buf.build/gen/go/a-novel/proto/grpc/go v1.5.1-20241029113528-092dcdc50d47.1 h1:Bf5SLh8nLQoc63FfUBnLQ14ZwuWUyfi4+n/PUkeymiQ=
-buf.build/gen/go/a-novel/proto/grpc/go v1.5.1-20241029113528-092dcdc50d47.1/go.mod h1:G2+NNk64SyXvWeKfXAGfqXgIYH0+j8Mj5ZRTWXdKah0=
+buf.build/gen/go/a-novel/proto/grpc/go v1.5.1-20241031140937-64af4e9e8fe2.1 h1:A2NE0L+T6An0CNiQlcieDb7KKhJSxh1SZB3B6YOis/E=
+buf.build/gen/go/a-novel/proto/grpc/go v1.5.1-20241031140937-64af4e9e8fe2.1/go.mod h1:4BXFulcH4rhg06ePtHz3sgq1q8XO6fsYSY2vh+uJkmI=
 buf.build/gen/go/a-novel/proto/protocolbuffers/go v1.35.1-20241030161759-864f59470662.1 h1:Zuc9bY0srEfzHPjWersOfjQWbR/QrHXhDttAkICpRKM=
 buf.build/gen/go/a-novel/proto/protocolbuffers/go v1.35.1-20241030161759-864f59470662.1/go.mod h1:H7nNhKcix4fGE9ib/sFZoNkGoG0PYPQxgz5TYrtDVro=
 cloud.google.com/go v0.26.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
