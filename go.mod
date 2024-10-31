@@ -3,7 +3,7 @@ module github.com/a-novel/uservice-story-structure
 go 1.23.2
 
 require (
-	buf.build/gen/go/a-novel/proto/grpc/go v1.5.1-20241029113528-092dcdc50d47.1
+	buf.build/gen/go/a-novel/proto/grpc/go v1.5.1-20241031140937-64af4e9e8fe2.1
 	buf.build/gen/go/a-novel/proto/protocolbuffers/go v1.35.1-20241030161759-864f59470662.1
 	github.com/a-novel/golib v0.0.0-20241030035236-c63636c9edd6
 	github.com/charmbracelet/bubbles v0.20.0
