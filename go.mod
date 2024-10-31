@@ -4,10 +4,9 @@ go 1.23.2
 
 require (
 	buf.build/gen/go/a-novel/proto/grpc/go v1.5.1-20241029113528-092dcdc50d47.1
-	buf.build/gen/go/a-novel/proto/protocolbuffers/go v1.35.1-20241029113528-092dcdc50d47.1
+	buf.build/gen/go/a-novel/proto/protocolbuffers/go v1.35.1-20241030161759-864f59470662.1
 	github.com/a-novel/golib v0.0.0-20241030035236-c63636c9edd6
 	github.com/charmbracelet/bubbles v0.20.0
-	github.com/charmbracelet/lipgloss v0.13.1
 	github.com/go-playground/validator/v10 v10.22.1
 	github.com/google/uuid v1.6.0
 	github.com/rs/zerolog v1.33.0
@@ -26,6 +25,7 @@ require (
 	github.com/bytedance/sonic v1.12.3 // indirect
 	github.com/bytedance/sonic/loader v0.2.1 // indirect
 	github.com/charmbracelet/bubbletea v1.1.2 // indirect
+	github.com/charmbracelet/lipgloss v0.13.1 // indirect
 	github.com/charmbracelet/x/ansi v0.4.2 // indirect
 	github.com/charmbracelet/x/term v0.2.0 // indirect
 	github.com/cloudwego/base64x v0.1.4 // indirect
