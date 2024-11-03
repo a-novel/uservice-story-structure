@@ -8,6 +8,8 @@ import (
 	"github.com/samber/lo"
 	"github.com/uptrace/bun"
 
+	"github.com/a-novel/golib/database"
+
 	"github.com/a-novel/uservice-story-structure/pkg/entities"
 )
 
@@ -15,7 +17,7 @@ type SearchPlotPointsRequest struct {
 	Limit         int
 	Offset        int
 	Sort          entities.SortPlotPoint
-	SortDirection entities.SortDirection
+	SortDirection database.SortDirection
 	CreatorIDs    []string
 }
 
@@ -39,9 +41,9 @@ func (dao *searchPlotPointsImpl) Exec(ctx context.Context, request *SearchPlotPo
 
 	// Only apply sorting direction if a sort value is present. Otherwise, ignore it and use default sorting.
 	if request.Sort != entities.SortPlotPointNone {
-		direction := lo.Switch[entities.SortDirection, string](request.SortDirection).
-			Case(entities.SortDirectionAsc, "ASC").
-			Case(entities.SortDirectionDesc, "DESC").
+		direction := lo.Switch[database.SortDirection, string](request.SortDirection).
+			Case(database.SortDirectionAsc, "ASC").
+			Case(database.SortDirectionDesc, "DESC").
 			Default("ASC")
 
 		sort := lo.Switch[entities.SortPlotPoint, string](request.Sort).

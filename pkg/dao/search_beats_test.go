@@ -136,7 +136,7 @@ func TestSearchBeats(t *testing.T) {
 			request: &dao.SearchBeatsRequest{
 				Limit:         3,
 				Offset:        0,
-				SortDirection: entities.SortDirectionAsc,
+				SortDirection: anoveldb.SortDirectionAsc,
 				Sort:          entities.SortBeatName,
 			},
 			expect: uuid.UUIDs{
@@ -150,7 +150,7 @@ func TestSearchBeats(t *testing.T) {
 			request: &dao.SearchBeatsRequest{
 				Limit:         3,
 				Offset:        0,
-				SortDirection: entities.SortDirectionDesc,
+				SortDirection: anoveldb.SortDirectionDesc,
 				Sort:          entities.SortBeatName,
 			},
 			expect: uuid.UUIDs{
@@ -179,7 +179,7 @@ func TestSearchBeats(t *testing.T) {
 			request: &dao.SearchBeatsRequest{
 				Limit:         3,
 				Offset:        0,
-				SortDirection: entities.SortDirectionAsc,
+				SortDirection: anoveldb.SortDirectionAsc,
 				Sort:          entities.SortBeatCreatedAt,
 			},
 			expect: uuid.UUIDs{
@@ -193,7 +193,7 @@ func TestSearchBeats(t *testing.T) {
 			request: &dao.SearchBeatsRequest{
 				Limit:         3,
 				Offset:        0,
-				SortDirection: entities.SortDirectionDesc,
+				SortDirection: anoveldb.SortDirectionDesc,
 				Sort:          entities.SortBeatCreatedAt,
 			},
 			expect: uuid.UUIDs{
@@ -222,7 +222,7 @@ func TestSearchBeats(t *testing.T) {
 			request: &dao.SearchBeatsRequest{
 				Limit:         3,
 				Offset:        0,
-				SortDirection: entities.SortDirectionAsc,
+				SortDirection: anoveldb.SortDirectionAsc,
 				Sort:          entities.SortBeatUpdatedAt,
 			},
 			expect: uuid.UUIDs{
@@ -236,7 +236,7 @@ func TestSearchBeats(t *testing.T) {
 			request: &dao.SearchBeatsRequest{
 				Limit:         3,
 				Offset:        0,
-				SortDirection: entities.SortDirectionDesc,
+				SortDirection: anoveldb.SortDirectionDesc,
 				Sort:          entities.SortBeatUpdatedAt,
 			},
 			expect: uuid.UUIDs{

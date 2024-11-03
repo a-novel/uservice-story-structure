@@ -35,7 +35,7 @@ const (
 	SortPlotPointUpdatedAt SortPlotPoint = "updated_at"
 )
 
-func ValidateSortPlotPoint(field reflect.Value) interface{} {
+func RegisterSortPlotPoint(field reflect.Value) interface{} {
 	value, ok := field.Interface().(SortPlotPoint)
 	if !ok {
 		return nil

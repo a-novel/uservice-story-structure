@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/require"
-	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 
@@ -38,23 +37,6 @@ var servicesToTest = []string{
 	"update_plot_point",
 }
 
-func waitReady(t *testing.T, conn *grpc.ClientConn) {
-	t.Helper()
-
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-
-	healthClient := healthpb.NewHealthClient(conn)
-	require.Eventually(
-		t,
-		func() bool {
-			res, err := healthClient.Check(ctx, &healthpb.HealthCheckRequest{})
-			return err == nil && res.Status == healthpb.HealthCheckResponse_SERVING
-		},
-		10*time.Second, 100*time.Millisecond,
-	)
-}
-
 func TestIntegrationHealth(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping integration tests in short mode.")
@@ -67,7 +49,7 @@ func TestIntegrationHealth(t *testing.T) {
 
 	healthClient := healthpb.NewHealthClient(conn)
 
-	waitReady(t, conn)
+	testutils.WaitConn(t, conn)
 
 	for _, service := range servicesToTest {
 		res, err := healthClient.Check(context.Background(), &healthpb.HealthCheckRequest{Service: service})
@@ -86,7 +68,7 @@ func TestIntegrationBeatCRUD(t *testing.T) {
 	conn, err := pool.Open("0.0.0.0", 8080, anovelgrpc.ProtocolHTTP)
 	require.NoError(t, err)
 
-	waitReady(t, conn)
+	testutils.WaitConn(t, conn)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -157,7 +139,7 @@ func TestIntegrationPlotPointCRUD(t *testing.T) {
 	conn, err := pool.Open("0.0.0.0", 8080, anovelgrpc.ProtocolHTTP)
 	require.NoError(t, err)
 
-	waitReady(t, conn)
+	testutils.WaitConn(t, conn)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()

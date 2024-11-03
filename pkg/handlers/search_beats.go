@@ -10,6 +10,7 @@ import (
 	commonv1 "buf.build/gen/go/a-novel/proto/protocolbuffers/go/common/v1"
 	storystructurev1 "buf.build/gen/go/a-novel/proto/protocolbuffers/go/storystructure/v1"
 
+	"github.com/a-novel/golib/database"
 	"github.com/a-novel/golib/grpc"
 	"github.com/a-novel/golib/loggers/adapters"
 
@@ -51,10 +52,10 @@ func (handler *searchBeatsImpl) exec(
 				Case(storystructurev1.SortBeats_SORT_BEATS_BY_CREATED_AT, entities.SortBeatCreatedAt).
 				Case(storystructurev1.SortBeats_SORT_BEATS_BY_UPDATED_AT, entities.SortBeatUpdatedAt).
 				Default(entities.SortBeatNone),
-			SortDirection: lo.Switch[commonv1.SortDirection, entities.SortDirection](request.GetOrderDirection()).
-				Case(commonv1.SortDirection_SORT_DIRECTION_ASC, entities.SortDirectionAsc).
-				Case(commonv1.SortDirection_SORT_DIRECTION_DESC, entities.SortDirectionDesc).
-				Default(entities.SortDirectionNone),
+			SortDirection: lo.Switch[commonv1.SortDirection, database.SortDirection](request.GetOrderDirection()).
+				Case(commonv1.SortDirection_SORT_DIRECTION_ASC, database.SortDirectionAsc).
+				Case(commonv1.SortDirection_SORT_DIRECTION_DESC, database.SortDirectionDesc).
+				Default(database.SortDirectionNone),
 		},
 	)
 	if err != nil {

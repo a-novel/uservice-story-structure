@@ -6,6 +6,8 @@ import (
 
 	"github.com/go-playground/validator/v10"
 
+	"github.com/a-novel/golib/database"
+
 	"github.com/a-novel/uservice-story-structure/pkg/dao"
 	"github.com/a-novel/uservice-story-structure/pkg/entities"
 )
@@ -18,15 +20,15 @@ var (
 var searchBeatsValidate = validator.New(validator.WithRequiredStructEnabled())
 
 func init() {
-	searchBeatsValidate.RegisterCustomTypeFunc(entities.ValidateSortDirection, entities.SortDirection(""))
-	searchBeatsValidate.RegisterCustomTypeFunc(entities.ValidateSortBeat, entities.SortBeat(""))
+	database.RegisterSortDirection(searchBeatsValidate)
+	searchBeatsValidate.RegisterCustomTypeFunc(entities.RegisterSortBeat, entities.SortBeat(""))
 }
 
 type SearchBeatsRequest struct {
 	Limit         int                    `validate:"required,min=1,max=128"`
 	Offset        int                    `validate:"omitempty,min=0"`
 	Sort          entities.SortBeat      `validate:"omitempty,oneof=name created_at updated_at"`
-	SortDirection entities.SortDirection `validate:"omitempty,oneof=asc desc"`
+	SortDirection database.SortDirection `validate:"omitempty,oneof=asc desc"`
 	CreatorIDs    []string               `validate:"omitempty,dive,min=1,max=128"`
 }
 

@@ -36,7 +36,7 @@ const (
 	SortBeatUpdatedAt SortBeat = "updated_at"
 )
 
-func ValidateSortBeat(field reflect.Value) interface{} {
+func RegisterSortBeat(field reflect.Value) interface{} {
 	value, ok := field.Interface().(SortBeat)
 	if !ok {
 		return nil
