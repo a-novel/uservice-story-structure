@@ -6,6 +6,8 @@ import (
 
 	"github.com/go-playground/validator/v10"
 
+	"github.com/a-novel/golib/database"
+
 	"github.com/a-novel/uservice-story-structure/pkg/dao"
 	"github.com/a-novel/uservice-story-structure/pkg/entities"
 )
@@ -18,15 +20,15 @@ var (
 var searchPlotPointsValidate = validator.New(validator.WithRequiredStructEnabled())
 
 func init() {
-	searchPlotPointsValidate.RegisterCustomTypeFunc(entities.ValidateSortDirection, entities.SortDirection(""))
-	searchPlotPointsValidate.RegisterCustomTypeFunc(entities.ValidateSortPlotPoint, entities.SortPlotPoint(""))
+	database.RegisterSortDirection(searchBeatsValidate)
+	searchPlotPointsValidate.RegisterCustomTypeFunc(entities.RegisterSortPlotPoint, entities.SortPlotPoint(""))
 }
 
 type SearchPlotPointsRequest struct {
 	Limit         int                    `validate:"required,min=1,max=128"`
 	Offset        int                    `validate:"omitempty,min=0"`
 	Sort          entities.SortPlotPoint `validate:"omitempty,oneof=name created_at updated_at"`
-	SortDirection entities.SortDirection `validate:"omitempty,oneof=asc desc"`
+	SortDirection database.SortDirection `validate:"omitempty,oneof=asc desc"`
 	CreatorIDs    []string               `validate:"omitempty,dive,min=1,max=128"`
 }
 

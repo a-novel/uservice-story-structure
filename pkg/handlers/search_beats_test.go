@@ -12,6 +12,7 @@ import (
 	commonv1 "buf.build/gen/go/a-novel/proto/protocolbuffers/go/common/v1"
 	storystructurev1 "buf.build/gen/go/a-novel/proto/protocolbuffers/go/storystructure/v1"
 
+	"github.com/a-novel/golib/database"
 	adaptersmocks "github.com/a-novel/golib/loggers/adapters/mocks"
 	"github.com/a-novel/golib/testutils"
 
@@ -45,7 +46,7 @@ func TestSearchBeats(t *testing.T) {
 				Limit:         10,
 				Offset:        20,
 				Sort:          entities.SortBeatNone,
-				SortDirection: entities.SortDirectionNone,
+				SortDirection: database.SortDirectionNone,
 			},
 			serviceResp: &services.SearchBeatsResponse{
 				IDs: []string{"id-1", "id-2", "id-3"},
@@ -68,7 +69,7 @@ func TestSearchBeats(t *testing.T) {
 				Limit:         10,
 				Offset:        20,
 				Sort:          entities.SortBeatNone,
-				SortDirection: entities.SortDirectionNone,
+				SortDirection: database.SortDirectionNone,
 				CreatorIDs:    []string{"creator-1", "creator-2"},
 			},
 			serviceResp: &services.SearchBeatsResponse{
@@ -92,7 +93,7 @@ func TestSearchBeats(t *testing.T) {
 				Limit:         10,
 				Offset:        20,
 				Sort:          entities.SortBeatNone,
-				SortDirection: entities.SortDirectionAsc,
+				SortDirection: database.SortDirectionAsc,
 			},
 			serviceResp: &services.SearchBeatsResponse{
 				IDs: []string{"id-1", "id-2", "id-3"},
@@ -115,7 +116,7 @@ func TestSearchBeats(t *testing.T) {
 				Limit:         10,
 				Offset:        20,
 				Sort:          entities.SortBeatNone,
-				SortDirection: entities.SortDirectionDesc,
+				SortDirection: database.SortDirectionDesc,
 			},
 			serviceResp: &services.SearchBeatsResponse{
 				IDs: []string{"id-1", "id-2", "id-3"},
@@ -138,7 +139,7 @@ func TestSearchBeats(t *testing.T) {
 				Limit:         10,
 				Offset:        20,
 				Sort:          entities.SortBeatName,
-				SortDirection: entities.SortDirectionNone,
+				SortDirection: database.SortDirectionNone,
 			},
 			serviceResp: &services.SearchBeatsResponse{
 				IDs: []string{"id-1", "id-2", "id-3"},
@@ -161,7 +162,7 @@ func TestSearchBeats(t *testing.T) {
 				Limit:         10,
 				Offset:        20,
 				Sort:          entities.SortBeatCreatedAt,
-				SortDirection: entities.SortDirectionNone,
+				SortDirection: database.SortDirectionNone,
 			},
 			serviceResp: &services.SearchBeatsResponse{
 				IDs: []string{"id-1", "id-2", "id-3"},
@@ -184,7 +185,7 @@ func TestSearchBeats(t *testing.T) {
 				Limit:         10,
 				Offset:        20,
 				Sort:          entities.SortBeatUpdatedAt,
-				SortDirection: entities.SortDirectionNone,
+				SortDirection: database.SortDirectionNone,
 			},
 			serviceResp: &services.SearchBeatsResponse{
 				IDs: []string{"id-1", "id-2", "id-3"},
@@ -207,7 +208,7 @@ func TestSearchBeats(t *testing.T) {
 				Limit:         10,
 				Offset:        20,
 				Sort:          entities.SortBeatNone,
-				SortDirection: entities.SortDirectionNone,
+				SortDirection: database.SortDirectionNone,
 			},
 			serviceErr: services.ErrInvalidSearchBeatsRequest,
 
@@ -224,7 +225,7 @@ func TestSearchBeats(t *testing.T) {
 				Limit:         10,
 				Offset:        20,
 				Sort:          entities.SortBeatNone,
-				SortDirection: entities.SortDirectionNone,
+				SortDirection: database.SortDirectionNone,
 			},
 			serviceErr: errors.New("uwups"),
 

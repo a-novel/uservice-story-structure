@@ -136,7 +136,7 @@ func TestSearchPlotPoints(t *testing.T) {
 			request: &dao.SearchPlotPointsRequest{
 				Limit:         3,
 				Offset:        0,
-				SortDirection: entities.SortDirectionAsc,
+				SortDirection: anoveldb.SortDirectionAsc,
 				Sort:          entities.SortPlotPointName,
 			},
 			expect: uuid.UUIDs{
@@ -150,7 +150,7 @@ func TestSearchPlotPoints(t *testing.T) {
 			request: &dao.SearchPlotPointsRequest{
 				Limit:         3,
 				Offset:        0,
-				SortDirection: entities.SortDirectionDesc,
+				SortDirection: anoveldb.SortDirectionDesc,
 				Sort:          entities.SortPlotPointName,
 			},
 			expect: uuid.UUIDs{
@@ -179,7 +179,7 @@ func TestSearchPlotPoints(t *testing.T) {
 			request: &dao.SearchPlotPointsRequest{
 				Limit:         3,
 				Offset:        0,
-				SortDirection: entities.SortDirectionAsc,
+				SortDirection: anoveldb.SortDirectionAsc,
 				Sort:          entities.SortPlotPointCreatedAt,
 			},
 			expect: uuid.UUIDs{
@@ -193,7 +193,7 @@ func TestSearchPlotPoints(t *testing.T) {
 			request: &dao.SearchPlotPointsRequest{
 				Limit:         3,
 				Offset:        0,
-				SortDirection: entities.SortDirectionDesc,
+				SortDirection: anoveldb.SortDirectionDesc,
 				Sort:          entities.SortPlotPointCreatedAt,
 			},
 			expect: uuid.UUIDs{
@@ -222,7 +222,7 @@ func TestSearchPlotPoints(t *testing.T) {
 			request: &dao.SearchPlotPointsRequest{
 				Limit:         3,
 				Offset:        0,
-				SortDirection: entities.SortDirectionAsc,
+				SortDirection: anoveldb.SortDirectionAsc,
 				Sort:          entities.SortPlotPointUpdatedAt,
 			},
 			expect: uuid.UUIDs{
@@ -236,7 +236,7 @@ func TestSearchPlotPoints(t *testing.T) {
 			request: &dao.SearchPlotPointsRequest{
 				Limit:         3,
 				Offset:        0,
-				SortDirection: entities.SortDirectionDesc,
+				SortDirection: anoveldb.SortDirectionDesc,
 				Sort:          entities.SortPlotPointUpdatedAt,
 			},
 			expect: uuid.UUIDs{
