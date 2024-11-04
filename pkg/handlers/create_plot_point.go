@@ -23,18 +23,13 @@ type CreatePlotPoint interface {
 
 type createPlotPointImpl struct {
 	service services.CreatePlotPoint
-	logger  adapters.GRPC
-
-	report func(
-		context.Context, *storystructurev1.CreatePlotPointServiceExecRequest,
-	) (*storystructurev1.CreatePlotPointServiceExecResponse, error)
 }
 
 var handleCreatePlotPointError = grpc.HandleError(codes.Internal).
 	Is(services.ErrInvalidCreatePlotPointRequest, codes.InvalidArgument).
 	Handle
 
-func (handler *createPlotPointImpl) exec(
+func (handler *createPlotPointImpl) Exec(
 	ctx context.Context,
 	request *storystructurev1.CreatePlotPointServiceExecRequest,
 ) (*storystructurev1.CreatePlotPointServiceExecResponse, error) {
@@ -56,15 +51,7 @@ func (handler *createPlotPointImpl) exec(
 	}, nil
 }
 
-func (handler *createPlotPointImpl) Exec(
-	ctx context.Context,
-	request *storystructurev1.CreatePlotPointServiceExecRequest,
-) (*storystructurev1.CreatePlotPointServiceExecResponse, error) {
-	return handler.report(ctx, request)
-}
-
 func NewCreatePlotPoint(service services.CreatePlotPoint, logger adapters.GRPC) CreatePlotPoint {
-	handler := &createPlotPointImpl{service: service, logger: logger}
-	handler.report = adapters.WrapGRPCCall(CreatePlotPointServiceName, logger, handler.exec)
-	return handler
+	handler := &createPlotPointImpl{service: service}
+	return grpc.ServiceWithMetrics(CreatePlotPointServiceName, handler, logger)
 }

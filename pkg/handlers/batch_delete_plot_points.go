@@ -23,16 +23,13 @@ type BatchDeletePlotPoints interface {
 
 type batchDeletePlotPointsImpl struct {
 	service services.BatchDeletePlotPoints
-	logger  adapters.GRPC
-
-	report func(context.Context, *storystructurev1.BatchDeletePlotPointsServiceExecRequest) (*emptypb.Empty, error)
 }
 
 var handleBatchDeletePlotPointsError = grpc.HandleError(codes.Internal).
 	Is(services.ErrInvalidBatchDeletePlotPointsRequest, codes.InvalidArgument).
 	Handle
 
-func (handler *batchDeletePlotPointsImpl) exec(
+func (handler *batchDeletePlotPointsImpl) Exec(
 	ctx context.Context,
 	request *storystructurev1.BatchDeletePlotPointsServiceExecRequest,
 ) (*emptypb.Empty, error) {
@@ -47,15 +44,7 @@ func (handler *batchDeletePlotPointsImpl) exec(
 	return new(emptypb.Empty), nil
 }
 
-func (handler *batchDeletePlotPointsImpl) Exec(
-	ctx context.Context,
-	request *storystructurev1.BatchDeletePlotPointsServiceExecRequest,
-) (*emptypb.Empty, error) {
-	return handler.report(ctx, request)
-}
-
 func NewBatchDeletePlotPoints(service services.BatchDeletePlotPoints, logger adapters.GRPC) BatchDeletePlotPoints {
-	handler := &batchDeletePlotPointsImpl{service: service, logger: logger}
-	handler.report = adapters.WrapGRPCCall(BatchDeletePlotPointsServiceName, logger, handler.exec)
-	return handler
+	handler := &batchDeletePlotPointsImpl{service: service}
+	return grpc.ServiceWithMetrics(BatchDeletePlotPointsServiceName, handler, logger)
 }

@@ -24,11 +24,6 @@ type ListBeats interface {
 
 type listBeatsImpl struct {
 	service services.ListBeats
-	logger  adapters.GRPC
-
-	report func(
-		context.Context, *storystructurev1.ListBeatsServiceExecRequest,
-	) (*storystructurev1.ListBeatsServiceExecResponse, error)
 }
 
 var handleListBeatsError = grpc.HandleError(codes.Internal).
@@ -52,7 +47,7 @@ func beatToListElementProto(
 	}
 }
 
-func (handler *listBeatsImpl) exec(
+func (handler *listBeatsImpl) Exec(
 	ctx context.Context,
 	request *storystructurev1.ListBeatsServiceExecRequest,
 ) (*storystructurev1.ListBeatsServiceExecResponse, error) {
@@ -66,15 +61,7 @@ func (handler *listBeatsImpl) exec(
 	return &storystructurev1.ListBeatsServiceExecResponse{Beats: beats}, nil
 }
 
-func (handler *listBeatsImpl) Exec(
-	ctx context.Context,
-	request *storystructurev1.ListBeatsServiceExecRequest,
-) (*storystructurev1.ListBeatsServiceExecResponse, error) {
-	return handler.report(ctx, request)
-}
-
 func NewListBeats(service services.ListBeats, logger adapters.GRPC) ListBeats {
-	handler := &listBeatsImpl{service: service, logger: logger}
-	handler.report = adapters.WrapGRPCCall(ListBeatsServiceName, logger, handler.exec)
-	return handler
+	handler := &listBeatsImpl{service: service}
+	return grpc.ServiceWithMetrics(ListBeatsServiceName, handler, logger)
 }

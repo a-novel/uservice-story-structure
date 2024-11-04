@@ -26,18 +26,13 @@ type SearchBeats interface {
 
 type searchBeatsImpl struct {
 	service services.SearchBeats
-	logger  adapters.GRPC
-
-	report func(
-		context.Context, *storystructurev1.SearchBeatsServiceExecRequest,
-	) (*storystructurev1.SearchBeatsServiceExecResponse, error)
 }
 
 var handleSearchBeatsError = grpc.HandleError(codes.Internal).
 	Is(services.ErrInvalidSearchBeatsRequest, codes.InvalidArgument).
 	Handle
 
-func (handler *searchBeatsImpl) exec(
+func (handler *searchBeatsImpl) Exec(
 	ctx context.Context,
 	request *storystructurev1.SearchBeatsServiceExecRequest,
 ) (*storystructurev1.SearchBeatsServiceExecResponse, error) {
@@ -65,15 +60,7 @@ func (handler *searchBeatsImpl) exec(
 	return &storystructurev1.SearchBeatsServiceExecResponse{Ids: res.IDs}, nil
 }
 
-func (handler *searchBeatsImpl) Exec(
-	ctx context.Context,
-	request *storystructurev1.SearchBeatsServiceExecRequest,
-) (*storystructurev1.SearchBeatsServiceExecResponse, error) {
-	return handler.report(ctx, request)
-}
-
 func NewSearchBeats(service services.SearchBeats, logger adapters.GRPC) SearchBeats {
-	handler := &searchBeatsImpl{service: service, logger: logger}
-	handler.report = adapters.WrapGRPCCall(SearchBeatsServiceName, logger, handler.exec)
-	return handler
+	handler := &searchBeatsImpl{service: service}
+	return grpc.ServiceWithMetrics(SearchBeatsServiceName, handler, logger)
 }

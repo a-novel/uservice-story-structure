@@ -25,11 +25,6 @@ type UpdatePlotPoint interface {
 
 type updatePlotPointImpl struct {
 	service services.UpdatePlotPoint
-	logger  adapters.GRPC
-
-	report func(
-		context.Context, *storystructurev1.UpdatePlotPointServiceExecRequest,
-	) (*storystructurev1.UpdatePlotPointServiceExecResponse, error)
 }
 
 var handleUpdatePlotPointError = grpc.HandleError(codes.Internal).
@@ -37,7 +32,7 @@ var handleUpdatePlotPointError = grpc.HandleError(codes.Internal).
 	Is(dao.ErrPlotPointNotFound, codes.NotFound).
 	Handle
 
-func (handler *updatePlotPointImpl) exec(
+func (handler *updatePlotPointImpl) Exec(
 	ctx context.Context,
 	request *storystructurev1.UpdatePlotPointServiceExecRequest,
 ) (*storystructurev1.UpdatePlotPointServiceExecResponse, error) {
@@ -68,15 +63,7 @@ func (handler *updatePlotPointImpl) exec(
 	}, nil
 }
 
-func (handler *updatePlotPointImpl) Exec(
-	ctx context.Context,
-	request *storystructurev1.UpdatePlotPointServiceExecRequest,
-) (*storystructurev1.UpdatePlotPointServiceExecResponse, error) {
-	return handler.report(ctx, request)
-}
-
 func NewUpdatePlotPoint(service services.UpdatePlotPoint, logger adapters.GRPC) UpdatePlotPoint {
-	handler := &updatePlotPointImpl{service: service, logger: logger}
-	handler.report = adapters.WrapGRPCCall(UpdatePlotPointServiceName, logger, handler.exec)
-	return handler
+	handler := &updatePlotPointImpl{service: service}
+	return grpc.ServiceWithMetrics(UpdatePlotPointServiceName, handler, logger)
 }

@@ -25,11 +25,6 @@ type GetPlotPoint interface {
 
 type getPlotPointImpl struct {
 	service services.GetPlotPoint
-	logger  adapters.GRPC
-
-	report func(
-		context.Context, *storystructurev1.GetPlotPointServiceExecRequest,
-	) (*storystructurev1.GetPlotPointServiceExecResponse, error)
 }
 
 var handleGetPlotPointError = grpc.HandleError(codes.Internal).
@@ -37,7 +32,7 @@ var handleGetPlotPointError = grpc.HandleError(codes.Internal).
 	Is(dao.ErrPlotPointNotFound, codes.NotFound).
 	Handle
 
-func (handler *getPlotPointImpl) exec(
+func (handler *getPlotPointImpl) Exec(
 	ctx context.Context,
 	request *storystructurev1.GetPlotPointServiceExecRequest,
 ) (*storystructurev1.GetPlotPointServiceExecResponse, error) {
@@ -60,15 +55,7 @@ func (handler *getPlotPointImpl) exec(
 	}, nil
 }
 
-func (handler *getPlotPointImpl) Exec(
-	ctx context.Context,
-	request *storystructurev1.GetPlotPointServiceExecRequest,
-) (*storystructurev1.GetPlotPointServiceExecResponse, error) {
-	return handler.report(ctx, request)
-}
-
 func NewGetPlotPoint(service services.GetPlotPoint, logger adapters.GRPC) GetPlotPoint {
-	handler := &getPlotPointImpl{service: service, logger: logger}
-	handler.report = adapters.WrapGRPCCall(GetPlotPointServiceName, logger, handler.exec)
-	return handler
+	handler := &getPlotPointImpl{service: service}
+	return grpc.ServiceWithMetrics(GetPlotPointServiceName, handler, logger)
 }

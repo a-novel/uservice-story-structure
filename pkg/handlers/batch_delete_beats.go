@@ -23,16 +23,13 @@ type BatchDeleteBeats interface {
 
 type batchDeleteBeatsImpl struct {
 	service services.BatchDeleteBeats
-	logger  adapters.GRPC
-
-	report func(context.Context, *storystructurev1.BatchDeleteBeatsServiceExecRequest) (*emptypb.Empty, error)
 }
 
 var handleBatchDeleteBeatsError = grpc.HandleError(codes.Internal).
 	Is(services.ErrInvalidBatchDeleteBeatsRequest, codes.InvalidArgument).
 	Handle
 
-func (handler *batchDeleteBeatsImpl) exec(
+func (handler *batchDeleteBeatsImpl) Exec(
 	ctx context.Context,
 	request *storystructurev1.BatchDeleteBeatsServiceExecRequest,
 ) (*emptypb.Empty, error) {
@@ -47,15 +44,7 @@ func (handler *batchDeleteBeatsImpl) exec(
 	return new(emptypb.Empty), nil
 }
 
-func (handler *batchDeleteBeatsImpl) Exec(
-	ctx context.Context,
-	request *storystructurev1.BatchDeleteBeatsServiceExecRequest,
-) (*emptypb.Empty, error) {
-	return handler.report(ctx, request)
-}
-
 func NewBatchDeleteBeats(service services.BatchDeleteBeats, logger adapters.GRPC) BatchDeleteBeats {
-	handler := &batchDeleteBeatsImpl{service: service, logger: logger}
-	handler.report = adapters.WrapGRPCCall(BatchDeleteBeatsServiceName, logger, handler.exec)
-	return handler
+	handler := &batchDeleteBeatsImpl{service: service}
+	return grpc.ServiceWithMetrics(BatchDeleteBeatsServiceName, handler, logger)
 }

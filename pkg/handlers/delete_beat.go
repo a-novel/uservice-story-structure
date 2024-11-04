@@ -24,9 +24,6 @@ type DeleteBeat interface {
 
 type deleteBeatImpl struct {
 	service services.DeleteBeat
-	logger  adapters.GRPC
-
-	report func(context.Context, *storystructurev1.DeleteBeatServiceExecRequest) (*emptypb.Empty, error)
 }
 
 var handleDeleteBeatError = grpc.HandleError(codes.Internal).
@@ -34,7 +31,7 @@ var handleDeleteBeatError = grpc.HandleError(codes.Internal).
 	Is(dao.ErrBeatNotFound, codes.NotFound).
 	Handle
 
-func (handler *deleteBeatImpl) exec(
+func (handler *deleteBeatImpl) Exec(
 	ctx context.Context,
 	request *storystructurev1.DeleteBeatServiceExecRequest,
 ) (*emptypb.Empty, error) {
@@ -49,15 +46,7 @@ func (handler *deleteBeatImpl) exec(
 	return new(emptypb.Empty), nil
 }
 
-func (handler *deleteBeatImpl) Exec(
-	ctx context.Context,
-	request *storystructurev1.DeleteBeatServiceExecRequest,
-) (*emptypb.Empty, error) {
-	return handler.report(ctx, request)
-}
-
 func NewDeleteBeat(service services.DeleteBeat, logger adapters.GRPC) DeleteBeat {
-	handler := &deleteBeatImpl{service: service, logger: logger}
-	handler.report = adapters.WrapGRPCCall(DeleteBeatServiceName, logger, handler.exec)
-	return handler
+	handler := &deleteBeatImpl{service: service}
+	return grpc.ServiceWithMetrics(DeleteBeatServiceName, handler, logger)
 }

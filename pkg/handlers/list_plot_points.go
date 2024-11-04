@@ -24,11 +24,6 @@ type ListPlotPoints interface {
 
 type listPlotPointsImpl struct {
 	service services.ListPlotPoints
-	logger  adapters.GRPC
-
-	report func(
-		context.Context, *storystructurev1.ListPlotPointsServiceExecRequest,
-	) (*storystructurev1.ListPlotPointsServiceExecResponse, error)
 }
 
 var handleListPlotPointsError = grpc.HandleError(codes.Internal).
@@ -52,7 +47,7 @@ func plotPointToListElementProto(
 	}
 }
 
-func (handler *listPlotPointsImpl) exec(
+func (handler *listPlotPointsImpl) Exec(
 	ctx context.Context,
 	request *storystructurev1.ListPlotPointsServiceExecRequest,
 ) (*storystructurev1.ListPlotPointsServiceExecResponse, error) {
@@ -66,15 +61,7 @@ func (handler *listPlotPointsImpl) exec(
 	return &storystructurev1.ListPlotPointsServiceExecResponse{PlotPoints: beats}, nil
 }
 
-func (handler *listPlotPointsImpl) Exec(
-	ctx context.Context,
-	request *storystructurev1.ListPlotPointsServiceExecRequest,
-) (*storystructurev1.ListPlotPointsServiceExecResponse, error) {
-	return handler.report(ctx, request)
-}
-
 func NewListPlotPoints(service services.ListPlotPoints, logger adapters.GRPC) ListPlotPoints {
-	handler := &listPlotPointsImpl{service: service, logger: logger}
-	handler.report = adapters.WrapGRPCCall(ListPlotPointsServiceName, logger, handler.exec)
-	return handler
+	handler := &listPlotPointsImpl{service: service}
+	return grpc.ServiceWithMetrics(ListPlotPointsServiceName, handler, logger)
 }
