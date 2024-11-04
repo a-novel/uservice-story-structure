@@ -3,9 +3,9 @@ module github.com/a-novel/uservice-story-structure
 go 1.23.2
 
 require (
-	buf.build/gen/go/a-novel/proto/grpc/go v1.5.1-20241031140937-64af4e9e8fe2.1
-	buf.build/gen/go/a-novel/proto/protocolbuffers/go v1.35.1-20241031140937-64af4e9e8fe2.1
-	github.com/a-novel/golib v0.0.0-20241103204431-b403a7e7169d
+	buf.build/gen/go/a-novel/proto/grpc/go v1.5.1-20241104074346-b6198dbfbb79.1
+	buf.build/gen/go/a-novel/proto/protocolbuffers/go v1.35.1-20241104074346-b6198dbfbb79.1
+	github.com/a-novel/golib v0.0.0-20241104110344-035a4377c698
 	github.com/charmbracelet/bubbles v0.20.0
 	github.com/go-playground/validator/v10 v10.22.1
 	github.com/google/uuid v1.6.0

@@ -21,14 +21,22 @@ var searchBeatsValidate = validator.New(validator.WithRequiredStructEnabled())
 
 func init() {
 	database.RegisterSortDirection(searchBeatsValidate)
-	searchBeatsValidate.RegisterCustomTypeFunc(entities.RegisterSortBeat, entities.SortBeat(""))
+	database.MustRegisterValidation(
+		searchBeatsValidate, "sort_beat",
+		database.ValidateEnum(
+			entities.SortBeatNone,
+			entities.SortBeatName,
+			entities.SortBeatCreatedAt,
+			entities.SortBeatUpdatedAt,
+		),
+	)
 }
 
 type SearchBeatsRequest struct {
 	Limit         int                    `validate:"required,min=1,max=128"`
 	Offset        int                    `validate:"omitempty,min=0"`
-	Sort          entities.SortBeat      `validate:"omitempty,oneof=name created_at updated_at"`
-	SortDirection database.SortDirection `validate:"omitempty,oneof=asc desc"`
+	Sort          entities.SortBeat      `validate:"omitempty,sort_beat"`
+	SortDirection database.SortDirection `validate:"omitempty,sort_direction"`
 	CreatorIDs    []string               `validate:"omitempty,dive,min=1,max=128"`
 }
 

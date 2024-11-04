@@ -1,7 +1,6 @@
 package entities
 
 import (
-	"reflect"
 	"time"
 
 	"github.com/google/uuid"
@@ -34,12 +33,3 @@ const (
 	SortPlotPointCreatedAt SortPlotPoint = "created_at"
 	SortPlotPointUpdatedAt SortPlotPoint = "updated_at"
 )
-
-func RegisterSortPlotPoint(field reflect.Value) interface{} {
-	value, ok := field.Interface().(SortPlotPoint)
-	if !ok {
-		return nil
-	}
-
-	return string(value)
-}

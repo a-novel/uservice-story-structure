@@ -1,7 +1,6 @@
 package entities
 
 import (
-	"reflect"
 	"time"
 
 	"github.com/google/uuid"
@@ -35,12 +34,3 @@ const (
 	SortBeatCreatedAt SortBeat = "created_at"
 	SortBeatUpdatedAt SortBeat = "updated_at"
 )
-
-func RegisterSortBeat(field reflect.Value) interface{} {
-	value, ok := field.Interface().(SortBeat)
-	if !ok {
-		return nil
-	}
-
-	return string(value)
-}
