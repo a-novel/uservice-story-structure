@@ -37,7 +37,7 @@ type SearchPlotPointsRequest struct {
 	Offset        int                    `validate:"omitempty,min=0"`
 	Sort          entities.SortPlotPoint `validate:"omitempty,sort_plot_point"`
 	SortDirection database.SortDirection `validate:"omitempty,sort_direction"`
-	CreatorIDs    []string               `validate:"omitempty,dive,min=1,max=128"`
+	CreatorIDs    []string               `validate:"omitempty,max=128,dive,min=1,max=128"`
 }
 
 type SearchPlotPointsResponse struct {
