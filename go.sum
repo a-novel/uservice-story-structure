@@ -1,7 +1,7 @@
-buf.build/gen/go/a-novel/proto/grpc/go v1.5.1-20241031140937-64af4e9e8fe2.1 h1:A2NE0L+T6An0CNiQlcieDb7KKhJSxh1SZB3B6YOis/E=
-buf.build/gen/go/a-novel/proto/grpc/go v1.5.1-20241031140937-64af4e9e8fe2.1/go.mod h1:4BXFulcH4rhg06ePtHz3sgq1q8XO6fsYSY2vh+uJkmI=
-buf.build/gen/go/a-novel/proto/protocolbuffers/go v1.35.1-20241031140937-64af4e9e8fe2.1 h1:hEj3GBrl8HQcDJ0PGWm5NNxJynj9MzHWUpsKWIgiTdY=
-buf.build/gen/go/a-novel/proto/protocolbuffers/go v1.35.1-20241031140937-64af4e9e8fe2.1/go.mod h1:H7nNhKcix4fGE9ib/sFZoNkGoG0PYPQxgz5TYrtDVro=
+buf.build/gen/go/a-novel/proto/grpc/go v1.5.1-20241104074346-b6198dbfbb79.1 h1:diFO3QGIhFkwYAv3kFixirLsYka2c3f93DGT806dC7Q=
+buf.build/gen/go/a-novel/proto/grpc/go v1.5.1-20241104074346-b6198dbfbb79.1/go.mod h1:frCjzZH6eIPw46SZqXHu69g3PjsVezPEowe0KBmBI20=
+buf.build/gen/go/a-novel/proto/protocolbuffers/go v1.35.1-20241104074346-b6198dbfbb79.1 h1:eyY2ySgAZrYveXyW0nDXbTIR3fcUPWUD2WKp43Dm5ro=
+buf.build/gen/go/a-novel/proto/protocolbuffers/go v1.35.1-20241104074346-b6198dbfbb79.1/go.mod h1:H7nNhKcix4fGE9ib/sFZoNkGoG0PYPQxgz5TYrtDVro=
 cloud.google.com/go v0.26.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
 cloud.google.com/go/auth v0.10.0 h1:tWlkvFAh+wwTOzXIjrwM64karR1iTBZ/GRr0S/DULYo=
 cloud.google.com/go/auth v0.10.0/go.mod h1:xxA5AqpDrvS+Gkmo9RqrGGRh6WSNKKOXhY3zNOr38tI=
@@ -10,8 +10,8 @@ cloud.google.com/go/auth/oauth2adapt v0.2.5/go.mod h1:AlmsELtlEBnaNTL7jCj8VQFLy6
 cloud.google.com/go/compute/metadata v0.5.2 h1:UxK4uu/Tn+I3p2dYWTfiX4wva7aYlKixAHn3fyqngqo=
 cloud.google.com/go/compute/metadata v0.5.2/go.mod h1:C66sj2AluDcIqakBq/M8lw8/ybHgOZqin2obFxa/E5k=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
-github.com/a-novel/golib v0.0.0-20241103204431-b403a7e7169d h1:+jyEE3qZBpDb0vOWH0VbUtEsS2hJN+Dss2eo0dV9Mk0=
-github.com/a-novel/golib v0.0.0-20241103204431-b403a7e7169d/go.mod h1:Olhk4Gpve+HoclCEJd5qLyaUxFKy3iIcXXNL/on/QHI=
+github.com/a-novel/golib v0.0.0-20241104110344-035a4377c698 h1:lvfxMXOQL3wg+STzZJUG6BPTS/FVwqYTbnSa4THl+gs=
+github.com/a-novel/golib v0.0.0-20241104110344-035a4377c698/go.mod h1:M5tLG1sRq0tRtB2C+k0advHQwflctUWrJqLmbmVJo4s=
 github.com/aymanbagabas/go-osc52/v2 v2.0.1 h1:HwpRHbFMcZLEVr42D4p7XBqjyuxQH5SMiErDT4WkJ2k=
 github.com/aymanbagabas/go-osc52/v2 v2.0.1/go.mod h1:uYgXzlJ7ZpABp8OJ+exZzJJhRNQ2ASbcXHWsFqH8hp8=
 github.com/aymanbagabas/go-udiff v0.2.0 h1:TK0fH4MteXUDspT88n8CKzvK0X9O2xu9yQjWpi6yML8=

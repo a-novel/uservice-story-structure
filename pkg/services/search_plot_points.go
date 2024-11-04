@@ -20,15 +20,23 @@ var (
 var searchPlotPointsValidate = validator.New(validator.WithRequiredStructEnabled())
 
 func init() {
-	database.RegisterSortDirection(searchBeatsValidate)
-	searchPlotPointsValidate.RegisterCustomTypeFunc(entities.RegisterSortPlotPoint, entities.SortPlotPoint(""))
+	database.RegisterSortDirection(searchPlotPointsValidate)
+	database.MustRegisterValidation(
+		searchPlotPointsValidate, "sort_plot_point",
+		database.ValidateEnum(
+			entities.SortPlotPointNone,
+			entities.SortPlotPointName,
+			entities.SortPlotPointCreatedAt,
+			entities.SortPlotPointUpdatedAt,
+		),
+	)
 }
 
 type SearchPlotPointsRequest struct {
 	Limit         int                    `validate:"required,min=1,max=128"`
 	Offset        int                    `validate:"omitempty,min=0"`
-	Sort          entities.SortPlotPoint `validate:"omitempty,oneof=name created_at updated_at"`
-	SortDirection database.SortDirection `validate:"omitempty,oneof=asc desc"`
+	Sort          entities.SortPlotPoint `validate:"omitempty,sort_plot_point"`
+	SortDirection database.SortDirection `validate:"omitempty,sort_direction"`
 	CreatorIDs    []string               `validate:"omitempty,dive,min=1,max=128"`
 }
 
