@@ -5,6 +5,10 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
+
+	storystructurev1 "buf.build/gen/go/a-novel/proto/protocolbuffers/go/storystructure/v1"
+
+	"github.com/a-novel/golib/grpc"
 )
 
 // PlotPoint is the main instruction used to generate a plot point. A plot point is shaped by multiple beats.
@@ -32,4 +36,14 @@ const (
 	SortPlotPointName      SortPlotPoint = "name"
 	SortPlotPointCreatedAt SortPlotPoint = "created_at"
 	SortPlotPointUpdatedAt SortPlotPoint = "updated_at"
+)
+
+var SortPlotPointConverter = grpc.NewProtoConverter(
+	grpc.ProtoMapper[storystructurev1.SortPlotPoints, SortPlotPoint]{
+		storystructurev1.SortPlotPoints_SORT_PLOT_POINTS_BY_NAME:       SortPlotPointName,
+		storystructurev1.SortPlotPoints_SORT_PLOT_POINTS_BY_CREATED_AT: SortPlotPointCreatedAt,
+		storystructurev1.SortPlotPoints_SORT_PLOT_POINTS_BY_UPDATED_AT: SortPlotPointUpdatedAt,
+	},
+	storystructurev1.SortPlotPoints_SORT_PLOT_POINTS_UNSPECIFIED,
+	SortPlotPointNone,
 )

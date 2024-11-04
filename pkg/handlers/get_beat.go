@@ -3,7 +3,6 @@ package handlers
 import (
 	"context"
 
-	"github.com/samber/lo"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
@@ -47,11 +46,7 @@ func (handler *getBeatImpl) Exec(
 		Prompt:    res.Prompt,
 		CreatorId: res.CreatorID,
 		CreatedAt: timestamppb.New(res.CreatedAt),
-		UpdatedAt: lo.TernaryF(
-			res.UpdatedAt == nil,
-			func() *timestamppb.Timestamp { return nil },
-			func() *timestamppb.Timestamp { return timestamppb.New(*res.UpdatedAt) },
-		),
+		UpdatedAt: grpc.TimestampOptional(res.UpdatedAt),
 	}, nil
 }
 

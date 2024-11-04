@@ -39,11 +39,7 @@ func beatToListElementProto(
 		Prompt:    item.Prompt,
 		CreatorId: item.CreatorID,
 		CreatedAt: timestamppb.New(item.CreatedAt),
-		UpdatedAt: lo.TernaryF(
-			item.UpdatedAt == nil,
-			func() *timestamppb.Timestamp { return nil },
-			func() *timestamppb.Timestamp { return timestamppb.New(*item.UpdatedAt) },
-		),
+		UpdatedAt: grpc.TimestampOptional(item.UpdatedAt),
 	}
 }
 
