@@ -25,11 +25,6 @@ type GetBeat interface {
 
 type getBeatImpl struct {
 	service services.GetBeat
-	logger  adapters.GRPC
-
-	report func(
-		context.Context, *storystructurev1.GetBeatServiceExecRequest,
-	) (*storystructurev1.GetBeatServiceExecResponse, error)
 }
 
 var handleGetBeatError = grpc.HandleError(codes.Internal).
@@ -37,7 +32,7 @@ var handleGetBeatError = grpc.HandleError(codes.Internal).
 	Is(dao.ErrBeatNotFound, codes.NotFound).
 	Handle
 
-func (handler *getBeatImpl) exec(
+func (handler *getBeatImpl) Exec(
 	ctx context.Context,
 	request *storystructurev1.GetBeatServiceExecRequest,
 ) (*storystructurev1.GetBeatServiceExecResponse, error) {
@@ -60,15 +55,7 @@ func (handler *getBeatImpl) exec(
 	}, nil
 }
 
-func (handler *getBeatImpl) Exec(
-	ctx context.Context,
-	request *storystructurev1.GetBeatServiceExecRequest,
-) (*storystructurev1.GetBeatServiceExecResponse, error) {
-	return handler.report(ctx, request)
-}
-
 func NewGetBeat(service services.GetBeat, logger adapters.GRPC) GetBeat {
-	handler := &getBeatImpl{service: service, logger: logger}
-	handler.report = adapters.WrapGRPCCall(GetBeatServiceName, logger, handler.exec)
-	return handler
+	handler := &getBeatImpl{service: service}
+	return grpc.ServiceWithMetrics(GetBeatServiceName, handler, logger)
 }

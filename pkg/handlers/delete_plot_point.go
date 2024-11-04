@@ -24,9 +24,6 @@ type DeletePlotPoint interface {
 
 type deletePlotPointImpl struct {
 	service services.DeletePlotPoint
-	logger  adapters.GRPC
-
-	report func(context.Context, *storystructurev1.DeletePlotPointServiceExecRequest) (*emptypb.Empty, error)
 }
 
 var handleDeletePlotPointError = grpc.HandleError(codes.Internal).
@@ -34,7 +31,7 @@ var handleDeletePlotPointError = grpc.HandleError(codes.Internal).
 	Is(dao.ErrPlotPointNotFound, codes.NotFound).
 	Handle
 
-func (handler *deletePlotPointImpl) exec(
+func (handler *deletePlotPointImpl) Exec(
 	ctx context.Context,
 	request *storystructurev1.DeletePlotPointServiceExecRequest,
 ) (*emptypb.Empty, error) {
@@ -49,15 +46,7 @@ func (handler *deletePlotPointImpl) exec(
 	return new(emptypb.Empty), nil
 }
 
-func (handler *deletePlotPointImpl) Exec(
-	ctx context.Context,
-	request *storystructurev1.DeletePlotPointServiceExecRequest,
-) (*emptypb.Empty, error) {
-	return handler.report(ctx, request)
-}
-
 func NewDeletePlotPoint(service services.DeletePlotPoint, logger adapters.GRPC) DeletePlotPoint {
-	handler := &deletePlotPointImpl{service: service, logger: logger}
-	handler.report = adapters.WrapGRPCCall(DeletePlotPointServiceName, logger, handler.exec)
-	return handler
+	handler := &deletePlotPointImpl{service: service}
+	return grpc.ServiceWithMetrics(DeletePlotPointServiceName, handler, logger)
 }

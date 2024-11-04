@@ -26,18 +26,13 @@ type SearchPlotPoints interface {
 
 type searchPlotPointsImpl struct {
 	service services.SearchPlotPoints
-	logger  adapters.GRPC
-
-	report func(
-		context.Context, *storystructurev1.SearchPlotPointsServiceExecRequest,
-	) (*storystructurev1.SearchPlotPointsServiceExecResponse, error)
 }
 
 var handleSearchPlotPointsError = grpc.HandleError(codes.Internal).
 	Is(services.ErrInvalidSearchPlotPointsRequest, codes.InvalidArgument).
 	Handle
 
-func (handler *searchPlotPointsImpl) exec(
+func (handler *searchPlotPointsImpl) Exec(
 	ctx context.Context,
 	request *storystructurev1.SearchPlotPointsServiceExecRequest,
 ) (*storystructurev1.SearchPlotPointsServiceExecResponse, error) {
@@ -65,15 +60,7 @@ func (handler *searchPlotPointsImpl) exec(
 	return &storystructurev1.SearchPlotPointsServiceExecResponse{Ids: res.IDs}, nil
 }
 
-func (handler *searchPlotPointsImpl) Exec(
-	ctx context.Context,
-	request *storystructurev1.SearchPlotPointsServiceExecRequest,
-) (*storystructurev1.SearchPlotPointsServiceExecResponse, error) {
-	return handler.report(ctx, request)
-}
-
 func NewSearchPlotPoints(service services.SearchPlotPoints, logger adapters.GRPC) SearchPlotPoints {
-	handler := &searchPlotPointsImpl{service: service, logger: logger}
-	handler.report = adapters.WrapGRPCCall(SearchPlotPointsServiceName, logger, handler.exec)
-	return handler
+	handler := &searchPlotPointsImpl{service: service}
+	return grpc.ServiceWithMetrics(SearchPlotPointsServiceName, handler, logger)
 }

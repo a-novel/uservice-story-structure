@@ -23,18 +23,13 @@ type CreateBeat interface {
 
 type createBeatImpl struct {
 	service services.CreateBeat
-	logger  adapters.GRPC
-
-	report func(
-		context.Context, *storystructurev1.CreateBeatServiceExecRequest,
-	) (*storystructurev1.CreateBeatServiceExecResponse, error)
 }
 
 var handleCreateBeatError = grpc.HandleError(codes.Internal).
 	Is(services.ErrInvalidCreateBeatRequest, codes.InvalidArgument).
 	Handle
 
-func (handler *createBeatImpl) exec(
+func (handler *createBeatImpl) Exec(
 	ctx context.Context,
 	request *storystructurev1.CreateBeatServiceExecRequest,
 ) (*storystructurev1.CreateBeatServiceExecResponse, error) {
@@ -56,15 +51,7 @@ func (handler *createBeatImpl) exec(
 	}, nil
 }
 
-func (handler *createBeatImpl) Exec(
-	ctx context.Context,
-	request *storystructurev1.CreateBeatServiceExecRequest,
-) (*storystructurev1.CreateBeatServiceExecResponse, error) {
-	return handler.report(ctx, request)
-}
-
 func NewCreateBeat(service services.CreateBeat, logger adapters.GRPC) CreateBeat {
-	handler := &createBeatImpl{service: service, logger: logger}
-	handler.report = adapters.WrapGRPCCall(CreateBeatServiceName, logger, handler.exec)
-	return handler
+	handler := &createBeatImpl{service: service}
+	return grpc.ServiceWithMetrics(CreateBeatServiceName, handler, logger)
 }
