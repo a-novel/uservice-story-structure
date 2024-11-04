@@ -37,7 +37,7 @@ type SearchBeatsRequest struct {
 	Offset        int                    `validate:"omitempty,min=0"`
 	Sort          entities.SortBeat      `validate:"omitempty,sort_beat"`
 	SortDirection database.SortDirection `validate:"omitempty,sort_direction"`
-	CreatorIDs    []string               `validate:"omitempty,dive,min=1,max=128"`
+	CreatorIDs    []string               `validate:"omitempty,max=128,dive,min=1,max=128"`
 }
 
 type SearchBeatsResponse struct {
