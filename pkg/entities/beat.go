@@ -5,6 +5,10 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
+
+	storystructurev1 "buf.build/gen/go/a-novel/proto/protocolbuffers/go/storystructure/v1"
+
+	"github.com/a-novel/golib/grpc"
 )
 
 // Beat is a specific sub-instruction used to shape a plot point. Mixing different beats together gives the flavor
@@ -33,4 +37,14 @@ const (
 	SortBeatName      SortBeat = "name"
 	SortBeatCreatedAt SortBeat = "created_at"
 	SortBeatUpdatedAt SortBeat = "updated_at"
+)
+
+var SortBeatConverter = grpc.NewProtoConverter(
+	grpc.ProtoMapper[storystructurev1.SortBeats, SortBeat]{
+		storystructurev1.SortBeats_SORT_BEATS_BY_NAME:       SortBeatName,
+		storystructurev1.SortBeats_SORT_BEATS_BY_CREATED_AT: SortBeatCreatedAt,
+		storystructurev1.SortBeats_SORT_BEATS_BY_UPDATED_AT: SortBeatUpdatedAt,
+	},
+	storystructurev1.SortBeats_SORT_BEATS_UNSPECIFIED,
+	SortBeatNone,
 )

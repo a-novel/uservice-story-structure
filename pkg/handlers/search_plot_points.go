@@ -3,14 +3,11 @@ package handlers
 import (
 	"context"
 
-	"github.com/samber/lo"
 	"google.golang.org/grpc/codes"
 
 	"buf.build/gen/go/a-novel/proto/grpc/go/storystructure/v1/storystructurev1grpc"
-	commonv1 "buf.build/gen/go/a-novel/proto/protocolbuffers/go/common/v1"
 	storystructurev1 "buf.build/gen/go/a-novel/proto/protocolbuffers/go/storystructure/v1"
 
-	"github.com/a-novel/golib/database"
 	"github.com/a-novel/golib/grpc"
 	"github.com/a-novel/golib/loggers/adapters"
 
@@ -39,18 +36,11 @@ func (handler *searchPlotPointsImpl) Exec(
 	res, err := handler.service.Exec(
 		ctx,
 		&services.SearchPlotPointsRequest{
-			Limit:      int(request.GetPagination().GetLimit()),
-			Offset:     int(request.GetPagination().GetOffset()),
-			CreatorIDs: request.GetCreatorIds(),
-			Sort: lo.Switch[storystructurev1.SortPlotPoints, entities.SortPlotPoint](request.GetOrderBy()).
-				Case(storystructurev1.SortPlotPoints_SORT_PLOT_POINTS_BY_NAME, entities.SortPlotPointName).
-				Case(storystructurev1.SortPlotPoints_SORT_PLOT_POINTS_BY_CREATED_AT, entities.SortPlotPointCreatedAt).
-				Case(storystructurev1.SortPlotPoints_SORT_PLOT_POINTS_BY_UPDATED_AT, entities.SortPlotPointUpdatedAt).
-				Default(entities.SortPlotPointNone),
-			SortDirection: lo.Switch[commonv1.SortDirection, database.SortDirection](request.GetOrderDirection()).
-				Case(commonv1.SortDirection_SORT_DIRECTION_ASC, database.SortDirectionAsc).
-				Case(commonv1.SortDirection_SORT_DIRECTION_DESC, database.SortDirectionDesc).
-				Default(database.SortDirectionNone),
+			Limit:         int(request.GetPagination().GetLimit()),
+			Offset:        int(request.GetPagination().GetOffset()),
+			CreatorIDs:    request.GetCreatorIds(),
+			Sort:          entities.SortPlotPointConverter.FromProto(request.GetOrderBy()),
+			SortDirection: grpc.SortDirectionConverter.FromProto(request.GetOrderDirection()),
 		},
 	)
 	if err != nil {
