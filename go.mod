@@ -7,7 +7,7 @@ require (
 	buf.build/gen/go/a-novel/proto/protocolbuffers/go v1.35.1-20241105100003-97b1ea2903af.1
 	github.com/a-novel/golib v0.0.0-20241105213855-4549414c2417
 	github.com/charmbracelet/bubbles v0.20.0
-	github.com/go-playground/validator/v10 v10.22.1
+	github.com/go-playground/validator/v10 v10.23.0
 	github.com/google/uuid v1.6.0
 	github.com/rs/zerolog v1.33.0
 	github.com/samber/lo v1.47.0
