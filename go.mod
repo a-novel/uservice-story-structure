@@ -4,7 +4,7 @@ go 1.23.2
 
 require (
 	buf.build/gen/go/a-novel/proto/grpc/go v1.5.1-20241105100003-97b1ea2903af.1
-	buf.build/gen/go/a-novel/proto/protocolbuffers/go v1.35.1-20241105100003-97b1ea2903af.1
+	buf.build/gen/go/a-novel/proto/protocolbuffers/go v1.36.1-20241106125510-8cbf6983c821.1
 	github.com/a-novel/golib v0.0.0-20241105213855-4549414c2417
 	github.com/charmbracelet/bubbles v0.20.0
 	github.com/go-playground/validator/v10 v10.22.1
@@ -14,7 +14,7 @@ require (
 	github.com/stretchr/testify v1.9.0
 	github.com/uptrace/bun v1.2.5
 	google.golang.org/grpc v1.67.1
-	google.golang.org/protobuf v1.35.1
+	google.golang.org/protobuf v1.36.1
 )
 
 require (
